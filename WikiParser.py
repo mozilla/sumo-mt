@@ -93,12 +93,12 @@ class WikiParser(object):
         topRange    = 999
 
         # Create an initial random number in the range.
-        currentRandomNumber = str(random.randrange(bottomRange,topRange)) + "." + str(random.randrange(bottomRange,topRange))
+        currentRandomNumber = str(random.randrange(bottomRange,topRange)) + "-" + str(random.randrange(bottomRange,topRange))
 
         # If that number has already been used then pick another one.
         while currentRandomNumber in WikiParser.listOfUsedNumbers:
             # Generate another random number in the range.
-            currentRandomNumber = str(random.randrange(bottomRange,topRange)) + "." + str(random.randrange(bottomRange,topRange))
+            currentRandomNumber = str(random.randrange(bottomRange,topRange)) + "-" + str(random.randrange(bottomRange,topRange))
 
         # Keep track that this number has been used.
         WikiParser.listOfUsedNumbers.append(currentRandomNumber)
