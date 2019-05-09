@@ -1,5 +1,6 @@
 [settings]
+GOOGLE_APPLICATION_CREDENTIALS = ./credentials.json
+project_id = my-project-456882
+location = global
 DEFAULT_INPUT_LANGUAGE = en
 DEFAULT_OUTPUT_LANGUAGE = es
-project_id = my-project-98522
-location = global
