@@ -52,18 +52,16 @@ class WikiParser(object):
         if outputLanguage == inputLanguage:
             raise ValueError("Error: Input Language (" + inputLanguage + ") same as output Language (" + outputLanguage + ")")
 
-        self.mOutputFilename = ""
+        # Extract the raw input filename and its extension.
+        rawInputFilename, inputFilenameExtension = os.path.splitext(inputFilename)
 
-        if (len(inputFilename.split('.')) == 2):
-            # File has an extension
-            self.mOutputFilename = inputFilename.split('.')[0] + '-' + outputLanguage + '.' + inputFilename.split('.')[1]
-        else:
-            self.mOutputFilename = inputFilename + '-' + outputLanguage
+        # Construct the output filename.
+        self.mOutputFilename = rawInputFilename + '-' + outputLanguage + inputFilenameExtension
 
         # Keep track of the input filename.
         self.mInputFilename = inputFilename
 
-        # Main data structure is a list of objects
+        # Main data structure is a list of objects.
         self.mMedia = []
 
         # Get a file handle to the input mediawiki file.
