@@ -8,6 +8,7 @@ This script uses Google Cloud Translate API to translate mediwiki markup files.
 
 ```
 $ pip install --upgrade google-cloud-translate
+$ pip install configparser
 ```
 
 ### Google Cloud Translate set-up
@@ -15,11 +16,11 @@ $ pip install --upgrade google-cloud-translate
 - Create a project
 - Enable Translation API
 - Create a service account with Translate permissions
-- Download the private key as credentials.json in this same folder
+- Download the private key as ``credentials.json`` in this same folder
 
 ### Settings
 
-Rename ``settings_example`` into ``settings`` and change your project_id.
+Rename ``settings_example`` into ``settings``.
 
 ## Usage
 
