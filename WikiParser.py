@@ -14,19 +14,48 @@ from google.cloud import translate_v3beta1 as translate
 # So we can generate some random number ranges.
 import random
 
+# Parsing of JSON file(s).
+import json
+
+# Setup environment using project settings.
 import configparser
 
-parser = configparser.ConfigParser()
-parser.read('settings')
+# Name of the project settings file.
+SETTINGS_FILENAME = 'settings'
+# Settings sub-section within the settings file.
+SETTINGS_SECTION = 'settings'
 
-section = parser['settings']
+# Local parser to process the project settings.
+parser = configparser.ConfigParser()
+dataset = parser.read(SETTINGS_FILENAME)
+
+# Verify that the user has set up their settings environment.
+if len(dataset) != 1:
+    errMsg = "Error: Missing settings file (" + SETTINGS_FILENAME
+    errMsg += ") copy settings_example to " + SETTINGS_FILENAME
+    raise ValueError(errMsg)
+
+section = parser[SETTINGS_SECTION]
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = section['GOOGLE_APPLICATION_CREDENTIALS']
 DEFAULT_INPUT_LANGUAGE = section['DEFAULT_INPUT_LANGUAGE']
 DEFAULT_OUTPUT_LANGUAGE = section['DEFAULT_OUTPUT_LANGUAGE']
-project_id = section['project_id']
 location = section['location']
 
+# Verify that the credentials file exists.
+if not os.path.exists(section['GOOGLE_APPLICATION_CREDENTIALS']):
+    errMsg = "Error: Missing input settings Google App Credentials file ("
+    errMsg += section['GOOGLE_APPLICATION_CREDENTIALS'] + ")"
+    raise ValueError(errMsg)
+
+# Get the Google Cloud Project ID from the private key credentials file.
+with open(section['GOOGLE_APPLICATION_CREDENTIALS'], 'r') as googleCredentialsFile:
+
+    # Parse the credential's JSON file into dictionary.
+    googleCredentialsJson = json.load(googleCredentialsFile)
+
+# Google Application Project ID.
+project_id = googleCredentialsJson['project_id']
 
 class WikiParser(object):
 
