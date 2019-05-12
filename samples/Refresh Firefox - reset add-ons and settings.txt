@@ -1,0 +1,47 @@
+Refresh Firefox - reset add-ons and settings
+[[Template:desktoponly]]
+
+If you're having problems with Firefox, refreshing it can help. The refresh feature fixes many issues by restoring Firefox to its default state while saving your essential information like bookmarks, passwords, and open tabs. {note}'''Important:''' Since Firefox will revert to its original state, your own configurations and customizations, including [[Find and install add-ons to add features to Firefox#w_what-types-of-add-ons-can-i-install|extensions]], extension data, and about:config [[Configuration Editor for Firefox|preference configurations]]  are removed. If you've made accessibility configurations, you may need to change them back after refreshing.{/note}
+
+= Refresh Firefox =
+[[T:resetsteps]]
+
+= What does the refresh feature do? =
+All of your Firefox settings and personal information are stored in a [[Profiles - Where Firefox stores your bookmarks, passwords and other user data|profile folder]]. The refresh feature works by creating a new profile folder for you while saving your important data.
+
+Add-ons which are normally stored inside the Firefox profile folder, such as [https://addons.mozilla.org/firefox/extensions/ extensions] and [[Use themes to change the look of Firefox|themes]], will be removed. Add-ons stored in other locations{for not fx53}, such as [[Use plugins to play audio, video, games and more |plugins]],{/for} will not be removed but any modified preferences{for not fx53} (such as plugins you have disabled){/for} will be reset.
+
+== Firefox will save these items: ==
+*Bookmarks
+*Browsing and download history
+*Passwords
+*Open windows and tabs
+*Cookies
+*Web form auto-fill information
+*Personal dictionary
+
+== These items and settings will be removed: ==
+*[[Find and install add-ons to add features to Firefox|Extensions and themes]]
+*Website permissions
+*Modified preferences
+*[[Add or remove a search engine in Firefox#w_add-a-search-engine|Added search engines]]
+*DOM storage
+{for not fx56}
+*[[Advanced panel - Accessibility, browsing, network, updates, and other advanced settings in Firefox#w_certificates-tab|Security certificate and device settings]]
+{/for}
+{for fx56}
+*[[Secure Website Certificate|Security certificate]] and device settings
+{/for}
+*[[Change what Firefox does when you click on or download a file|Download actions]]
+{for not fx53}
+*Plugin settings
+{/for}
+*[[Customize Firefox controls, buttons and toolbars|Toolbar customizations]]
+{for not fx57}
+*[[Add social features to the Firefox sidebar|Social features]]
+{/for} 
+*User styles ({filepath chrome} subfolder containing {filepath userChrome} and/or {filepath userContent} [https://wikipedia.org/wiki/Cascading_Style_Sheets CSS files], if previously created.)
+
+{note}'''Note:''' Your old Firefox profile will be placed on your desktop in a folder named "Old Firefox Data". If the {for not fx35}reset{/for}{for fx35}refresh{/for} didn't fix your problem you can restore some of the information not saved by [[Recovering important data from an old profile#w_copying-files-between-profile-folders|copying files to the new profile that was created]]. If you don't need this folder any longer, you should delete it as it contains sensitive information.{/note}
+
+[[Template:top5afterword]]

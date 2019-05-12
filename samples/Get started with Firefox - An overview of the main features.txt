@@ -1,0 +1,145 @@
+Get started with Firefox - An overview of the main features
+
+<!-- The next two surveys are ONLY for the US, see https://support.mozilla.org/en-US/kb/get-started-firefox-overview-main-features/discuss/7308-->
+{for fx57}{warning}'''Got five minutes?''' Share your thoughts about Firefox by filling out this [https://qsurvey.mozilla.com/s3/Getting-Started-with-Firefox-SUMO-Survey?source=57 survey]. Thanks for your time!{/warning}{/for}
+{for not fx57}{warning}'''Got five minutes?''' Share your thoughts about Firefox by filling out this [https://qsurvey.mozilla.com/s3/Getting-Started-with-Firefox-SUMO-Survey survey]. Thanks for your time!{/warning}{/for}
+
+Welcome to Firefox! We'll show you all the basics to get you up and running. When you're ready to go beyond the basics, check out the other links for features you can explore later. 
+
+__TOC__
+
+{for fx57}
+=New Tab page: great content at your fingertips=
+By default, Firefox gives you access to great content every time you open a new tab. Customize this page by hovering over the sections and thumbnails or click the gear icon for more options.
+;[[Image:new tab page 57]]<!--If activity stream ships (decision on Nov 6) show [[Image:new tab page 57]]; otherwise, show [[Image:tile menu 57]] --><!--acivity stream will ship in 57: https://bugzilla.mozilla.org/show_bug.cgi?id=1411797#c13 -->
+{note} Want to learn more? See [[About the New Tab page]].{/note}
+
+=Search everything with the unified search/address bar=
+Whether you know the exact web address or just searching, the unified ''Awesome Bar'' handles it all. Firefox's URL bar gives you suggestions based on your existing bookmarks and tags, history, open tabs, and popular searches. How's that for Awesome? Just start typing in a search or url and watch the magic happen.
+;[[Image:awesome bar 57]]
+
+{note}Learn more search tricks with the [[Awesome Bar - Search your Firefox bookmarks, history and tabs from the address bar]].{/note}
+
+=Page actions menu: Bookmark, snap, save or share=
+Find a really great web page? Save it or share it. The Page Actions menu in the address bar lets you [[Bookmarks in Firefox|bookmark]] web pages, copy or email links, take [[Firefox Screenshots|screenshots]], and [[View synced tabs from other devices|send pages to your phone]] or to your [https://getpocket.com/ Pocket] list so you can read them whenever and wherever you want.
+;[[Image:page actions 57]]
+
+=Private Browsing with Tracking Protection: browse fast and free =
+Browse the Internet without saving any information on your computer about which sites and pages you’ve visited. Firefox will also block creepy trackers that follow your behavior across the Web.
+*Click the menu button [[Image:Fx57Menu]] and then click {button New Private Window}. ('''Tip:''' You can also {for win}right-click{/for}{for mac,linux}control + click{/for} on a link on a web page, then click {menu Open Link in New Private Window}.)
+;{for win}[[Image:private mask 57 win]]{/for}{for mac}[[Image:private mask 57]]{/for}{for linux}[[Image:private mask 57 linux]]{/for}
+{note}See [[Private Browsing - Use Firefox without saving history]] for more.{/note}
+
+= Keep your Firefox in sync =
+Set up Firefox Accounts so you can take your browsing information with you wherever you go. Click the menu button [[Image:Fx57Menu]], choose {button Sign in to Sync} and follow the instructions to create your account. Then sign in to the newly-created account on your other devices and that's it!
+{note}For detailed instructions, see [[How do I set up Firefox Sync?]]{/note}
+
+=Home is just a click away=
+''Choose the page that opens when you start Firefox or click the Home button.''
+# Open a tab with the web page you want to use as your home page.
+# Drag and drop that tab onto the Home button [[Image:Home Button 57]].
+#;[[Image:set homepage 57]]
+{note}More options can be found in the [[How to set the home page]] article.{/note}
+
+= Customize the menu or the toolbar =
+We've streamlined the toolbar with the most popular features but Firefox has even more features tucked away. Take a peek!  
+#Click the menu button [[Image:Fx57Menu]] and choose {button [[Image:57customize-icon.png]] Customize…}.
+#Drag and drop the features you want onto your toolbar or the panel on the right.
+#;[[Image:customize drag 57]]
+#When you are done, click the {button Done} button.
+{note}Learn more about [[Customize Firefox controls, buttons and toolbars|customizing Firefox]].{/note}
+{/for}
+
+{for not fx57}
+= Set or change your home page =
+''Choose the page that opens when you start Firefox or click the Home button.''
+<!-- TO LOCALIZE THE CAPTIONS FOR THIS VIDEO, SEE https://support.mozilla.org/en-US/kb/localize-a-support-video#w_localize-video-caption-files -->
+[[Video:http://youtu.be/Nnu0A-jIh-U]]
+# Open a tab with the webpage you want to use as your home page.
+# Drag and drop that tab onto the Home button [[Image:Home Button]].
+#;{for win}[[Image:Home Page 29 - Win8]]{/for}{for mac}[[Image:Home Page 29 - Mac]]{/for}{for linux}[[Image:Home Page 29 - Linux]]{/for}
+# Click {button Yes} to set this as your home page.
+More options can be found in the [[How to set the home page|home page article]].
+
+= Search the web =
+''Pick your favorite search engine with Firefox's built-in Search bar.''
+* Just start typing into the search bar and pick the search engine you want.
+*;{for win}[[Image:quick search win]]{/for}{for mac}[[Image:quick search fx34]]{/for}{for linux}[[Image:quick search linux Y]]{/for}
+
+Learn more search tricks with the [[Search bar - Easily choose your favorite search engine|Search bar article]].
+
+= Bookmark a website =
+''Save your favorite sites.''
+<!-- TO LOCALIZE THE CAPTIONS FOR THIS VIDEO, SEE https://support.mozilla.org/en-US/kb/localize-a-support-video#w_localize-video-caption-files -->
+[[Video:http://youtu.be/F3uMpJ0YzqM]]
+* To create a bookmark, click the star in the toolbar. The star will turn blue and a bookmark for the page you're on will be created in the {for not fx48}Unsorted Bookmarks{/for}{for fx48}Other Bookmarks{/for} folder. That's it!
+*;{for win}[[Image:Bookmark 29 Win]]{/for}{for mac}[[Image:Bookmark 29 Mac]]{/for}{for linux}[[Image:Bookmark 29 Lin]]{/for}
+{note}'''Tip:''' Drag a tab directly to your [[Create bookmarks to save your favorite webpages#w_how-do-i-turn-on-the-bookmarks-toolbar|bookmarks toolbar]] to save it there. {/note}
+For more information, see the [[Create bookmarks to save your favorite webpages|bookmarks article]].
+
+= Find everything with the Awesome Bar =
+''We like to call Firefox’s address bar the "Awesome Bar" because it quickly finds places you've visited before.''
+<!-- TO LOCALIZE THE CAPTIONS FOR THIS VIDEO, SEE https://support.mozilla.org/en-US/kb/localize-a-support-video#w_localize-video-caption-files -->
+[[Video:http://youtu.be/U7stmWKvk64]]
+* Start typing in the address bar and you'll see a list of pages from your browsing history and bookmarks. When you see the page you want, just click on it.
+*;{for win}[[Image:Bookmark3 29 Win]]{/for}{for mac}[[Image:Bookmark3 29 Mac]]{/for}{for linux}[[Image:Bookmark3 29 Lin]]{/for}
+{note}'''Tip:''' You can also do a web search from here. Give it a try.{/note}
+To learn more tricks, see the [[Search your bookmarks, history and tabs with the Awesome Bar|Awesome Bar article]].
+
+= Private Browsing =
+''Firefox’s Private Browsing feature allows you to browse the Internet without saving any information on your computer about which sites and pages you’ve visited.''
+<!-- TO LOCALIZE THE CAPTIONS FOR THIS VIDEO, SEE https://support.mozilla.org/en-US/kb/localize-a-support-video#w_localize-video-caption-files -->
+[[Video:http://youtu.be/r3s-zDwLjb0]]
+*Click the menu button [[Image:New Fx Menu]] and then click {button New Private Window}.
+*;{for winxp}[[Image:private browsing - fx29 - winxp]]{/for}{for win7,win8,win10}[[Image:private browsing - fx29 - win8]]{/for}{for mac}[[Image:private browsing - fx29 - mac]]{/for}{for linux}[[Image:private browsing button - linux]]{/for}
+Learn more about how [[Private Browsing - Browse the web without saving information about the sites you visit|Private Browsing]] works.
+
+= Customize the menu or the toolbar =
+''You can change the items that appear in the menu or your toolbar.''
+<!-- TO LOCALIZE THE CAPTIONS FOR THIS VIDEO, SEE https://support.mozilla.org/en-US/kb/localize-a-support-video#w_localize-video-caption-files -->
+[[Video:http://youtu.be/94tAqUObEfc]]
+#Click the menu button [[Image:new fx menu]] and choose {button Customize}. 
+#*A special tab will open which allows you to drag and drop items in or out of the menu and the toolbar. 
+#;{for win,mac}[[Image:Customize Fx 29 Win8]]{/for}{for linux}[[Image:Customize Fx 29 Linux]]{/for}
+#When you are done, click the green {button Exit Customize} button.
+Learn more about [[Customize Firefox controls, buttons and toolbars|customizing Firefox]].
+
+= Add features to Firefox with add-ons =
+''Add-ons are like apps that you can install to make Firefox work the way you want.''
+{for not fx48}
+<!-- TO LOCALIZE THE CAPTIONS FOR THIS VIDEO, SEE https://support.mozilla.org/en-US/kb/localize-a-support-video#w_localize-video-caption-files -->
+[[Video:http://youtu.be/i4y_CeifV2s]]
+# [[T:Open Add-ons|type=Get Add-ons]]
+# To see more information on a Featured Add-on or Theme, click it. You can then click the green {button Add to Firefox} button to install it.
+#*You can also search for specific add-ons by using the search box at the top. You can then install any add-ons you find with the {button Install} button.
+#*;{for win}[[Image:Addon1 29 Win]][[Image:Addon2 29 Win]]{/for}{for mac}[[Image:Addon1 29 Mac]][[Image:Addon2 29 Mac]]{/for}{for linux}[[Image:Addon1 29 Lin]][[Image:Addon2 29 Lin]]{/for}
+#Firefox will download the requested add-on and may ask you to confirm that you want to install it.
+# Click {button Restart Now} if it pops up. Your tabs will be saved and restored after the restart.
+{/for}
+{for fx48}
+# [[T:Open Add-ons|type=Get Add-ons]]
+# To install a featured add-on, click the grey toggle button, which will turn green. To uninstall an add-on you just installed, click the toggle button again.
+#;{for win,mac}[[Image:Fx48-GetAddons]]{/for}{for linux}[[Image:Fx48-GetAddons-Linux]]{/for}
+
+At the bottom of the list of featured add-ons, there's a {button See more add-ons!} button you can click. It will take you to addons.mozilla.org where you can search for specific add-ons.
+{/for}
+To learn more about add-ons, see [[Find and install add-ons to add features to Firefox]].
+{note}'''Tip:''' Some add-ons place a button in the toolbar after installation. You can remove those or move them into the menu if you want – see [[Customize Firefox controls, buttons and toolbars]].{/note}
+
+= Keep your Firefox in sync =
+''Access your bookmarks, history, passwords and more from any device.''
+<!-- TO LOCALIZE THE CAPTIONS FOR THIS VIDEO, SEE https://support.mozilla.org/en-US/kb/localize-a-support-video#w_localize-video-caption-files -->
+[[Video:http://youtu.be/wSVJrWzoq7E]]
+#First create a Firefox account:
+#*Click the menu button [[Image:New Fx Menu]] and choose {button Sign in to Sync} and follow the instructions to create your account.
+#;{for win,mac}[[Image:Sync 29]]{/for}{for linux}[[Image:Sync in menu Linux]]{/for}
+#Then just sign in to connect another device.
+For detailed instructions, see [[How do I set up Firefox Sync?]]
+{/for}
+
+= Get help =
+''If you have more questions or ever need help with Firefox, you're on the right website.'' 
+*[/products/firefox This site] has hundreds of articles that cover nearly every Firefox question you might have. 
+;[[Image:Get Help|link=/products/firefox]]<!-- TEXT VERSION OF THE BUTTON {button [/products/firefox Get Help]} -->
+
+[[Template:top5afterword]]

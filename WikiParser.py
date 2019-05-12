@@ -59,6 +59,7 @@ project_id = googleCredentialsJson['project_id']
 
 class WikiParser(object):
 
+    # TODO: It would be better to have this for each line we process in the file, not as a class variable.
     listOfUsedNumbers = []
 
     # Constructor.
@@ -79,7 +80,9 @@ class WikiParser(object):
             raise ValueError("Error: Input file (" + inputFilename + ") is empty.")
 
         if outputLanguage == inputLanguage:
-            raise ValueError("Error: Input Language (" + inputLanguage + ") same as output Language (" + outputLanguage + ")")
+            errStr = "Error: Input Language (" + inputLanguage + ")"
+            errStr += " same as output Language (" + outputLanguage + ")"
+            raise ValueError(errStr)
 
         # Extract the raw input filename and its extension.
         rawInputFilename, inputFilenameExtension = os.path.splitext(inputFilename)
@@ -107,8 +110,17 @@ class WikiParser(object):
         self.mTranslateClient = translate.TranslationServiceClient()
         self.mParent = self.mTranslateClient.location_path(project_id, location)
 
-        # Parse the Mediawiki file and load into our data structure.
-        self.parseMediaWikiFile()
+
+    #
+    # Perform the work to process the data.
+    #
+    def readProcessTranslateWrite(self):
+
+        # Read, process, translate and write the media wiki file.
+        self.readMediaWikiFile()
+        self.processMediaWikiFile()
+        self.translateMediaWikiFile()
+        self.writeMediaWikiFile()
 
 
     #
@@ -135,9 +147,9 @@ class WikiParser(object):
 
 
     #
-    # Parse the Mediawiki input file and store into a data structure.
+    # Load the media wiki file into an internal data structure.
     #
-    def parseMediaWikiFile(self):
+    def readMediaWikiFile(self):
 
         # Keep track of the line counter.
         # First line starts at number one.
@@ -149,169 +161,240 @@ class WikiParser(object):
             # Gobble the end of line character.
             currentLine = currentLine.rstrip()
 
-            # Verify we are not processing an empty line.
+            # Verify if we are processing an empty line.
             if not currentLine:
-                # Write a new line to the output file.
-                self.mOutputFileFh.write("\n")
+                self.mMedia.append({"originalLine": "",
+                                    "translatedLine": "",
+                                    "lineNumber": lineCounter,
+                                    "sequenceLine": "",
+                                    "sequences": [],
+                                    "emptyLine": True
+                                })
+            else:
+                self.mMedia.append({"originalLine": currentLine,
+                                    "translatedLine": "",
+                                    "lineNumber": lineCounter,
+                                    "sequenceLine": "",
+                                    "sequences": [],
+                                    "emptyLine": False
+                                })
 
-                # Keep track of the current line we are parsing.
-                lineCounter = lineCounter + 1
-
-                # Don't process any further as this line is empty.
-                continue
-
-
-            # Look for any special strings in the line and then replace it with a special number
-            # Then we can replace the special number later.
-            patternsToReplaceOrTranslate = [{"pattern":"(\{for[\s\w\-\_\.\,\'\’\=]+\})",
-                                             "translate": False},
-                                            {"pattern":"(\{\/for\})",
-                                             "translate": False},
-                                            {"pattern":"\{(button[\s\w\-\_\.\,\'\’\=]+)\}",
-                                             "translate": False},
-                                            {"pattern":"\{(menu[\s\w\-\_\.\,\'\’\=]+)\}",
-                                             "translate": False},
-                                            {"pattern":"(\{note\})",
-                                             "translate": False},
-                                            {"pattern":"(\{\/note\})",
-                                             "translate": False},
-                                            {"pattern":"(\{warning\})",
-                                             "translate": False},
-                                            {"pattern":"(\{\/warning\})",
-                                             "translate": False},
-                                            {"pattern":"\_\_TOC\_\_",
-                                             "translate": False},
-                                            {"pattern":"\_\_FORCETOC\_\_",
-                                             "translate": False},
-                                            {"pattern":"\_\_NOTOC\_\_",
-                                             "translate": False},
-                                            {"pattern":"\[\[Template\:[\w+\s]+\]\]",
-                                             "translate": False},
-                                            {"pattern":"\;*\[\[Image\:[\w\-\s\=\/\|]+\]\]",
-                                             "translate": False},
-                                            {"pattern":"\[\[Video\:[\w\s\:\/\.\_]+\]\]",
-                                             "translate": False},
-                                            {"pattern":"\[\[([\s\w\-\_\#\,\"]+)\|[\w\s]+\]\]",
-                                             "translate": False},
-                                            {"pattern":"\[\[T\:[\w\s\-\|\=\_]+\]\]",
-                                             "translate": False},
-                                            {"pattern":"\[\[[\s\w\-\_\#\,\"\/\.\?]+\]\]",
-                                             "translate": False},
-                                            {"pattern":"\-\-\-\-",
-                                             "translate": False},
-                                            {"pattern":"\<\!\-\-",
-                                             "translate": False},
-                                            {"pattern":"\-\-\>",
-                                             "translate": False},
-                                            {"pattern":"\<br\ \>",
-                                             "translate": False},
-
-                                            #############################
-                                            {"pattern":"\(([\s\w]+)\)",
-                                             "translate": True},
-                                            {"pattern":"\=([\s\w]+)\=",
-                                             "translate": True},
-                                            {"pattern":"\[\[[\s\d]+\|([\w\s]+)\]\]",
-                                             "translate": True},
-                                            {"pattern":"(\'\'\'[\s\w\-\_\#\,\"\.\?\:\>\<]+\'\'\')",
-                                             "translate": True},
-                                            {"pattern":"(\'\'[\s\w\-\_\#\,\"\.\?\:\>\<]+\'\')",
-                                             "translate": True},
-                                            #################################
-                                            {"pattern":"(\"[\s\w\-\_\#\,\.\?\:\>\<]+\")",
-                                             "translate": True},
-            ]
+            lineCounter += 1
 
 
-            # Patterns we want to replace with a special unique tag then we can put it back after
-            # into the final translation.
-            for replacePattern in patternsToReplaceOrTranslate:
+    #
+    # Using divide and conquer approach, lets process the media wiki file to
+    # smaller parts that we can translate a bit at a time.
+    #
+    def processMediaWikiFile(self):
 
-                currentPattern = re.compile(replacePattern["pattern"], re.IGNORECASE)
-                currentMatch = re.findall(currentPattern, currentLine)
-
-                if currentMatch:
-                    # Deal with multiple matches on the same line.
-                    for elementMatch in currentMatch:
-
-                        specialSequence = str(self.giveMeUniqueRandomNumber())
-                        currentLine = currentLine.replace(elementMatch, " " + specialSequence + " ")
-
-                        # Store this match so we can refer to it later.
-                        self.mMedia.append({"line": lineCounter,
-                                            "sequence": specialSequence,
-                                            "original": elementMatch,
-                                            "translate": replacePattern["translate"]})
-
-            # Translates some text into Spanish 'espanol = es' as default.
-            response = self.mTranslateClient.translate_text(parent=self.mParent,
-                                                            contents=[currentLine],
-                                                            mime_type='text/html',
-                                                            source_language_code=self.mInputLanguage,
-                                                            target_language_code=self.mOutputLanguage)
-            currentLineTranslated = ""
-            for currentTanslation in response.translations:
-                currentLineTranslated = currentTanslation.translated_text
-                break
-
-            # Now I need to replace each of the special sequences.
-            # Look through all the special sequences we have discovered so far.
-            for currentMedia in self.mMedia:
-                # Is this the line we are currently looking at?
-                if currentMedia['line'] == lineCounter:
-                    # Get it back to its original form.
-                    if currentMedia['translate']:
-
-                        response = self.mTranslateClient.translate_text(parent=self.mParent,
-                                                                        contents=[currentMedia['original']],
-                                                                        mime_type='text/plain',
-                                                                        source_language_code=self.mInputLanguage,
-                                                                        target_language_code=self.mOutputLanguage)
-
-                        specialTranslated = ""
-
-                        for currentTanslation in response.translations:
-                            specialTranslated = currentTanslation.translated_text
-                            break
-
-                        currentLineTranslated = currentLineTranslated.replace(str(currentMedia['sequence']),
-                                                                              specialTranslated.rstrip())
-                    else:
-                        currentLineTranslated = currentLineTranslated.replace(str(currentMedia['sequence']),
-                                                                              currentMedia['original'].decode('utf8'))
-
-            # Final clean up for "= something =" change to "=something="
-            # Clean up the spaces that are inbetween links and discrptions.
-            patternsToCleanup = {"^\#\s+": "#",
-                                 "^\#\s*\*\s*": "#*",
-                                 "^\*\s+": "*",
-                                 "^\=\s+": "=",
-                                 "^\s*": "",
-                                 "\s+\=$": "=",
-                                 "\s*\|\s*": "|",
-            }
-
-            # Clean up some patterns.
-            for cleanupPattern, cleanupSub in patternsToCleanup.iteritems():
-
-                currentPattern = re.compile(cleanupPattern, re.IGNORECASE)
-                currentMatch = re.findall(currentPattern, currentLineTranslated)
-
-                if currentMatch:
-                    for elementMatch in currentMatch:
-                        currentLineTranslated = re.sub(re.escape(elementMatch), cleanupSub, currentLineTranslated)
+        # Process one line at a time.
+        for currentMedia in self.mMedia:
+            if not currentMedia["emptyLine"]:
+                self.processMediaWikiLine(currentMedia)
 
 
+    #
+    # Perform the Goole Cloud translation of the string sequences
+    # that we are interested in and then recconstruct the translated
+    # lines with some formatting clean-up.
+    #
+    def translateMediaWikiFile(self):
+
+        # Translate one line at a time.
+        for currentMedia in self.mMedia:
+            if not currentMedia["emptyLine"]:
+                self.translateMediaWikiLine(currentMedia)
+                self.cleanupMediaWikiLine(currentMedia)
+
+
+    #
+    # Write out the media wiki file.
+    #
+    def writeMediaWikiFile(self):
+
+        # Translate one line at a time.
+        for currentMedia in self.mMedia:
             # Write the current translated line to the output file.
-            self.mOutputFileFh.write(currentLineTranslated.encode('utf8') + "\n")
-
-            # Keep track of the current line we are parsing.
-            lineCounter = lineCounter + 1
-
-        # Keep track of the number of lines parsed in the input file.
-        self.mLinecount = lineCounter
+            self.mOutputFileFh.write(currentMedia["translatedLine"].encode('utf8') + "\n")
 
         self.mOutputFileFh.close()
+
+
+    #
+    #  Process one line at a time.
+    #
+    def processMediaWikiLine(self, mediaLine):
+
+        mediaLine["sequenceLine"] = mediaLine["originalLine"]
+
+        # Look for any special strings in the line and then replace it with a special number
+        # Then we can replace the special number later.
+        patternsToReplaceOrTranslate = [{"pattern":"(\{for[\s\w\-\_\.\,\'\’\=]+\})",
+                                         "translate": False},
+                                        {"pattern":"(\{\/for\})",
+                                         "translate": False},
+                                        {"pattern":"\{(button[\s\w\-\_\.\,\'\’\=]+)\}",
+                                         "translate": False},
+                                        {"pattern":"(\{filepath[\s\w\-\_\.\,\'\’\=]+\})",
+                                         "translate": False},
+                                        {"pattern":"(\{key[\s\w\-\_\.\,\'\’\=]+\})",
+                                         "translate": False},
+                                        {"pattern":"\{(menu[\s\w\-\_\.\,\'\’\=]+)\}",
+                                         "translate": False},
+                                        {"pattern":"(\{note\})",
+                                         "translate": False},
+                                        {"pattern":"(\{\/note\})",
+                                         "translate": False},
+                                        {"pattern":"(\{warning\})",
+                                         "translate": False},
+                                        {"pattern":"(\{\/warning\})",
+                                         "translate": False},
+                                        {"pattern":"\_\_TOC\_\_",
+                                         "translate": False},
+                                        {"pattern":"\_\_FORCETOC\_\_",
+                                         "translate": False},
+                                        {"pattern":"\_\_NOTOC\_\_",
+                                         "translate": False},
+                                        {"pattern":"\[\[Template\:[\w+\s]+\]\]",
+                                         "translate": False},
+                                        {"pattern":"\;*\[\[Image\:[\w\-\s\=\/\|]+\]\]",
+                                         "translate": False},
+                                        {"pattern":"\[\[Video\:[\w\s\:\/\.\_]+\]\]",
+                                         "translate": False},
+                                        {"pattern":"\[\[([\s\w\-\_\#\,\"]+)\|[\w\s]+\]\]",
+                                         "translate": False},
+                                        {"pattern":"\[\[T\:[\w\s\-\|\=\_]+\]\]",
+                                         "translate": False},
+                                        {"pattern":"\[\[[\:\s\w\-\_\#\,\"\/\.\?]+\\=]\]",
+                                         "translate": False},
+                                        {"pattern":"\[[\:\s\w\-\_\#\,\"\/\.\?\=]+\]",
+                                         "translate": False},
+                                        {"pattern":"\-\-\-\-",
+                                         "translate": False},
+                                        {"pattern":"\<\!\-\-",
+                                         "translate": False},
+                                        {"pattern":"\-\-\>",
+                                         "translate": False},
+                                        {"pattern":"\<br\ \>",
+                                         "translate": False},
+                                        #############################
+                                        {"pattern":"\(([\s\w]+)\)",
+                                         "translate": True},
+                                        {"pattern":"\=([\s\w]+)\=",
+                                         "translate": True},
+                                        {"pattern":"\[\[[\s\d]+\|([\w\s]+)\]\]",
+                                         "translate": True},
+                                        {"pattern":"(\'\'\'[\s\w\-\_\#\,\"\.\?\:\>\<]+\'\'\')",
+                                         "translate": True},
+                                        {"pattern":"(\'\'[\s\w\-\_\#\,\"\.\?\:\>\<\’]+\'\')",
+                                         "translate": True},
+                                        #################################
+                                        {"pattern":"(\"http[\s\w\-\_\#\,\.\?\:\>\<\/]+\")",
+                                         "translate": False},
+                                        {"pattern":"(\"[\s\w\-\_\#\,\.\?\:\>\<\/]+\")",
+                                         "translate": True},
+                                    ]
+
+        # Patterns we want to replace with a special unique tag then we can put it back after
+        # into the final translation.
+        for replacePattern in patternsToReplaceOrTranslate:
+
+            currentPattern = re.compile(replacePattern["pattern"], re.IGNORECASE)
+            currentMatch = re.findall(currentPattern, mediaLine["sequenceLine"])
+
+            if currentMatch:
+                # Deal with multiple matches on the same line.
+                for elementMatch in currentMatch:
+
+                    specialSequence = str(self.giveMeUniqueRandomNumber())
+                    mediaLine["sequenceLine"] = mediaLine["sequenceLine"].replace(elementMatch, " " + specialSequence + " ")
+
+                    # Store this match so we can refer to it later.
+                    mediaLine["sequences"].append({"sequence": specialSequence,
+                                                   "original": elementMatch,
+                                                   "translate": replacePattern["translate"]})
+
+
+    #
+    # Perform the Google Translation on the requested line of information.
+    #
+    def translateMediaWikiLine(self, mediaLine):
+
+        # Translate the sequence line.
+        # Then we shall translate each of the sequences.
+        # Then finally we need to replace the sequences.
+
+        # Google Cloud Translate.
+        # For the whole line we need to use html otherwise get
+        # some unprintable characters in the translated string.
+        response = self.mTranslateClient.translate_text(parent=self.mParent,
+                                                        contents=[mediaLine["sequenceLine"]],
+                                                        mime_type='text/html', # Mime types: text/plain, text/html.
+                                                        source_language_code=self.mInputLanguage,
+                                                        target_language_code=self.mOutputLanguage)
+
+        for currentTanslation in response.translations:
+            mediaLine["translatedLine"] = currentTanslation.translated_text
+            break
+
+        # Reverse the list, so roll back the sequence replacements.
+        for currentSequence in reversed(mediaLine["sequences"]):
+            if currentSequence["translate"]:
+                # Translate first, then make the substitution.
+                # We can have quotes in the special substitutions so need to 
+                response = self.mTranslateClient.translate_text(parent=self.mParent,
+                                                                contents=[currentSequence['original']],
+                                                                mime_type='text/plain', # Mime types: text/plain, text/html.
+                                                                source_language_code=self.mInputLanguage,
+                                                                target_language_code=self.mOutputLanguage)
+                sequenceTranslated = ""
+
+                for currentTanslation in response.translations:
+                    sequenceTranslated = currentTanslation.translated_text
+                    break
+
+                mediaLine["translatedLine"] = mediaLine["translatedLine"].replace(str(currentSequence["sequence"]),
+                                                                                  sequenceTranslated.rstrip())
+
+            else:
+                # No translation required just a substitution.
+                mediaLine["translatedLine"] = mediaLine["translatedLine"].replace(str(currentSequence["sequence"]),
+                                                                                  currentSequence["original"].decode('utf8'))
+
+
+    #
+    # When sending text to Google Translation API we need to perform some clean-up on the 
+    # string that is returned due to extra white spaces that get added.
+    #
+    def cleanupMediaWikiLine(self, mediaLine):
+
+        # Final clean up for "= something =" change to "=something="
+        # Clean up the spaces that are in between links and discrptions.
+        patternsToCleanup = {"^\#\s+": "#",
+                             "^\#\s*\*\s*": "#*",
+                             "^\*\s+": "*",
+                             "^\=\s+": "=",
+                             "^\s*": "",
+                             "\s+\=$": "=",
+                             "\s*\|\s*": "|",
+                             "\'\'\s*\'": "'''",
+                             "\'\s*\'\'": "'''",
+                             "&quot;": "'",
+                         }
+
+        # Clean up some patterns.
+        for cleanupPattern, cleanupSub in patternsToCleanup.iteritems():
+
+            currentPattern = re.compile(cleanupPattern, re.IGNORECASE)
+            currentMatch = re.findall(currentPattern, mediaLine["translatedLine"])
+
+            if currentMatch:
+                for elementMatch in currentMatch:
+                    mediaLine["translatedLine"] = re.sub(re.escape(elementMatch),
+                                                         cleanupSub,
+                                                         mediaLine["translatedLine"])
+
 
     #
     #  Helpful to better understand what is inside the data scructure.
@@ -319,11 +402,17 @@ class WikiParser(object):
     def printWikiParser(self, depth=0):
 
         print "###"
-        print "# Filename:\t" + str(self.mInputFilename)
+        print "# Filename:\t" + str(self.getInputFilename())
         for currentElement in self.mMedia:
-            print "\tline:\t\t" + str(currentElement["line"])
-            print "\tsequence:\t\t" + str(currentElement["sequence"])
-            print "\toriginal:\t\t" + str(currentElement["original"])
+            if not currentElement["emptyLine"]:
+                print "  Original:"
+                print "  " + str(currentElement["originalLine"])
+                print "  " + str(currentElement["sequenceLine"])
+                for currentSequence in currentElement["sequences"]:
+                    print currentSequence["sequence"]
+                    print currentSequence["original"]
+                    print currentSequence["translate"]
+                    print "---"
 
 
     # Gettas.

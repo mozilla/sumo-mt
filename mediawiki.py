@@ -205,8 +205,10 @@ def main():
 
                     mediawikiParser = WikiParser.WikiParser(inputFilename = inputArgs['<inputfilename>'],
                                                             outputLanguage = currentLang)
+                    mediawikiParser.readProcessTranslateWrite()
             else:
                 mediawikiParser = WikiParser.WikiParser(inputFilename = inputArgs['<inputfilename>'])
+                mediawikiParser.readProcessTranslateWrite()
 
         except ValueError as exception:
             # what was the details of the error.
@@ -249,8 +251,10 @@ def main():
 
                     mediawikiParser = WikiParser.WikiParser(inputFilename = inputDir + currentFile,
                                                             outputLanguage = currentLang)
+                    mediawikiParser.readProcessTranslateWrite()
             else:
                 mediawikiParser = WikiParser.WikiParser(inputFilename = inputDir + currentFile)
+                mediawikiParser.readProcessTranslateWrite()
 
     # DEBUG: Report the data structure of special sequences.
     # mediawikiParser.printWikiParser()
