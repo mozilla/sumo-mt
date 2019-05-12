@@ -1,0 +1,222 @@
+Content blocking
+
+
+{for not fx63}[[T:update fx desktop]]{/for}
+{for fx67}
+Content blocking is a collection of Firefox privacy features that protect you from threats and annoyances on the Web. This includes protections against trackers, which collect your browsing data across multiple websites. Starting with Firefox version 67, you can block harmful scripts including cryptominers and fingerprinters.
+
+In some cases, blocking this content makes pages load faster, but can affect the page's functionality. It’s easy to [[#w_turn-content-blocking-off-on-individual-sites|disable blocking on sites you trust]]. You can also customize your content blocking preferences to [[#w_how-to-block-more-or-fewer-trackers|block more or fewer trackers]].
+{/for}
+
+{for not fx67}
+Some websites use trackers that can monitor your activity across the Internet. Content blocking is a collection of Firefox settings that block many of these third-party trackers. It keeps your browsing more private so information about you won’t be invisibly tracked, stored, and shared between websites.
+
+In some cases, blocking trackers keeps parts of pages or entire pages from loading. It’s easy to [[#w_turn-content-blocking-off-on-individual-sites_2|disable blocking on sites you trust]]. You can also customize your content blocking preferences to [[#w_how-to-block-more-or-fewer-trackers_2|block more or fewer trackers]].
+{/for}
+
+{for not fx65}
+Content blocking is a collection of Firefox settings, allowing you to block content that affects privacy and browsing performance. Starting with [[Find what version of Firefox you are using|Firefox version]] 63, you can block third-party tracking cookies and all detected trackers (previously known as Tracking Protection).
+{/for}
+
+__TOC__
+
+{for fx67}
+=Privacy protections included in content blocking=
+*Trackers: Tracking generally refers to content, cookies, or scripts that can collect your browsing data across multiple sites. Firefox blocks trackers in private windows by default. Select the '''Strict''' or '''Custom''' radio button for stronger tracking protections. 
+*Third-party tracking cookies: Third-party cookies are cookies that are set by a website other than the one you are currently on. Block third-party tracking cookies using the '''Strict''' and '''Custom''' radio buttons in Firefox version 67. 
+*Cryptominers: Cryptomining scripts use your computer’s central processing unit (CPU) to invisibly mine cryptocurrency. These scripts slow down your computer and drain your battery. Block cryptominers using the '''Custom''' radio button in Firefox version 67. 
+*Fingerprinters: Fingerprinting scripts are invisibly embedded on many web pages, harvesting a snapshot of your computer’s configuration to build a digital fingerprint that can be used to track you across the web even if you clear your cookies. Fingerprinting violates Firefox’s anti-tracking policy. Block fingerprinters using the '''Custom''' radio button in Firefox version 67. 
+
+=How to block more or fewer trackers=
+By default, Firefox protects you from being tracked in [[Private Browsing - Use Firefox without saving history|private windows]] using a basic list of known trackers provided by [https://disconnect.me/trackerprotection Disconnect]. Firefox allows some trackers so websites can function properly. You can change your settings  to block trackers all the time, to block trackers from Disconnect’s strict list, or to not block any trackers at all. 
+
+To adjust your settings:
+#Click the menu button [[Image:fx57menu]].
+#Click {menu Content Blocking}. <br />This takes you to the ''Content Blocking'' section in your Firefox [[T:optionsorpreferences]] Privacy & Security panel.
+#;[[Image:Content Blocking]]
+#Choose your content blocking settings:
+*'''Standard''': Only blocks known trackers in private windows. This is the default setting. To restore to defaults at anytime, select '''Standard'''.
+*'''Strict''': Blocks trackers in all windows and third-party tracking [[Cookies - Information that websites store on your computer|cookies]].
+*'''Custom''': Lets you choose what to block. You can also turn off all content blocking using the '''Custom''' radio button.
+
+You can also set Firefox to always send websites a ''Do Not Track'' signal. See [[How do I turn on the Do Not Track feature?]] to learn more.
+
+'''Custom settings:'''
+==Set Aggressive Tracking Protection==
+#Select '''Custom'''.
+#Select {menu In all windows} from the drop-down on the right.
+#;[[Image:Tracking Protection]]
+#Click the '''Change block list''' link. <br />The ''Block Lists'' pop-up displays.
+#Select {menu Level 2 block list. Blocks all detected trackers. Some websites or content may not load properly}.
+#Click {button Save Changes}.
+#Select the '''Cookies''' checkbox if not already selected. <br />{menu Third-Party Trackers} is selected by default. Select more aggressive cookie protections from the dropdown, such as blocking all third-party cookies or even blocking all cookies.
+#Select the '''Cryptominers''' checkbox.
+#Select the '''Fingerprinters''' checkbox.
+#Click the {button Reload All Tabs} button to apply these changes on all your open tabs.
+
+==Remove all protections==
+You can also remove all the protections offered by content blocking, which effectively disables the feature. 
+#Select the '''Custom''' radio button.
+#Deselect the '''Trackers''' checkbox.
+#Deselect the  '''Cookies''' checkbox.
+#Deselect the '''Cryptominers''' checkbox.
+#Deselect the '''Fingerprinters''' checkbox.
+#Click the {button Reload All Tabs} button to apply these changes on all your open tabs.
+
+=How to detect when content blocking is on=
+When Firefox is blocking content on a website, a shield icon [[Image:Address bar shield]] will appear in your address bar.
+;[[Image:url shield 65]]
+[[Template:controlcenterpanel]] View the Content Blocking section. This provides more information about the type of content Firefox is blocking, such as detected trackers and trackers set by third-party tracking cookies.
+;[[Image:content blocking panel 65]]
+The content that is blocked will depend on the website and your settings. Click on the arrows "'''>'''" to the right of the ''Trackers'' and ''Cookies'' settings to see what content has been blocked or permitted on the specific site you're on.
+;[[Image:blocked cookies 65]]
+Blocked content will be labeled as ''Blocked'' and grayed out.
+
+=Turn content blocking off on individual sites=
+Sometimes content blocking can prevent pages or parts of pages from loading. If content blocking interferes with your browsing, you can disable it on individual sites. The shield icon appears in the address bar when Firefox is actively blocking content on a page.
+#[[Template:controlcenterpanel]]
+#;[[Image:content blocking panel 65]]
+#Click the {button Turn off Blocking for This Site} button from a normal browsing window to disable blocking for the website. <br />If you're in a private window, click the {button Turn off Blocking Temporarily} button (see below). <br />Once content blocking is disabled, a shield icon with a strikethrough [[Image:shield icon strikethrough]] will appear in your address bar. To turn content blocking back on, expand the Control Center panel by clicking the shield or the {button site information} button [[Image:site info icon]] and click the {button Turn on Blocking for This Site} button.
+
+=Content Blocking in Private Browsing=
+Since [[Private Browsing - Use Firefox without saving history|Private Browsing]] doesn’t save information about your browsing session, when you disable content blocking for a site, it will only remain disabled during your current private browsing session. When you start a new private browsing session, your content blocking settings will be restored for all sites. If you’ve disabled content blocking for a site while in a normal browsing window, Firefox will continue to disable content blocking for this same site when in a private window.
+
+=Block lists in Firefox=
+By default, Firefox uses the [https://disconnect.me Disconnect.me] Level 1 block list. For more aggressive tracking protection, use the Disconnect<!-- -->.me Level 2 block list.
+*Level 1 blocks commonly known analytics trackers, social sharing trackers, and advertising trackers. However, the basic protection list allows some known content trackers so that fewer pages break or fail to load.
+*Level 2 list blocks all known trackers, including analytics trackers, social sharing trackers, and advertising trackers as well as content trackers. The strict list will break some videos, photo slideshows, and social networking features.
+
+==Change your block list==
+#Click the menu button [[Image:fx57menu]].
+#Click {menu Content Blocking}. <br />This takes you to the ''Content Blocking'' section in your Firefox [[T:optionsorpreferences]] Privacy & Security panel.
+#Select the '''Custom''' radio button.
+#Click the '''Change block list''' link.
+#Choose the block list you want to use.
+#;[[Image:Change Block Lists]]
+#Click {button Save Changes}.
+{/for}
+
+{for not fx67}
+=How to block more or fewer trackers=
+By default, Firefox protects you from being tracked in [[Private Browsing - Use Firefox without saving history|Private Windows]] using a basic list of known trackers provided by [https://disconnect.me/trackerprotection Disconnect]. Firefox allows some trackers so websites can function properly. You can change your settings to block trackers all the time, to block trackers from Disconnect’s strict list, or to not block any trackers at all. 
+
+To adjust your settings:
+#Click the menu button [[Image:fx57menu]].
+#Click {menu Content Blocking}. <br />This takes you to the Content Blocking section in your Firefox [[T:optionsorpreferences]] Privacy & Security panel.
+#;[[Image:Fx65ContentBlocking]]
+#Choose your content blocking settings:
+*'''Standard''': Only blocks known trackers in Private Windows. This is the default setting. To restore to defaults at anytime, select the '''Standard''' radio button.
+*'''Strict''': Blocks trackers in all windows and third-party tracking [[Cookies - Information that websites store on your computer|cookies]].
+*'''Custom''': Lets you choose what to block. You can also turn off all content blocking using the '''Custom''' radio button.
+
+You can also set Firefox to always send websites a ''Do Not Track'' signal. See [[How do I turn on the Do Not Track feature?]] to learn more.
+
+'''Custom settings:'''
+==Aggressive Tracking Protection==
+#Select '''Custom'''.
+#Select {menu In all windows} from the drop-down on the right.
+#;[[Image:content block custom all windows]]
+#Click the '''Change block list''' link. 
+#Select the '''Disconnect<!- ->.me strict protection''' checkbox.
+#Click {button Save Changes}.
+#Select '''Cookies'''. <br />''Third-Party Trackers'' is the default setting. Select more aggressive cookie protections from the dropdown, such as blocking all third-party cookies or even blocking all cookies.
+#*For more information about blocking cookies, see [[Disable third-party cookies in Firefox to stop some types of tracking by advertisers|this article]]. 
+
+==Remove all protections==
+You can also remove all the protections offered by Content Blocking, which effectively disables the feature. 
+#Select the '''Custom''' radio button.
+#Deselect the '''Trackers''' checkbox.
+#Deselect the  '''Cookies''' checkbox.
+
+=How to detect when content blocking is on=
+When Firefox is blocking content on a website, a shield icon [[Image:Address bar shield]] will appear in your address bar.
+;[[Image:url shield 65]]
+[[Template:controlcenterpanel]] This provides more information about the content Firefox is blocking, such as trackers or third-party tracking cookies.
+;[[Image:content blocking panel 65]]
+The content that is blocked will depend on the website and your settings. Click on the arrows "'''>'''" to the right of ''Trackers'' and ''Cookies'' to see what content has been blocked or permitted on the specific site that you're on.
+;[[Image:blocked cookies 65]]
+Blocked content will be labeled as ''Blocked'' and grayed out.
+
+=Turn content blocking off on individual sites=
+The shield icon [[Image:Address bar shield]] appears in the address bar when Firefox is actively blocking content on a page. Sometimes content blocking can prevent pages or parts of pages from loading. If content blocking interferes with your browsing, you can disable it on individual sites. 
+#[[Template:controlcenterpanel]]
+#;[[Image:content blocking panel 65]]
+#Click the {button Turn off Blocking for This Site} button to disable blocking for the website in a normal browsing window. If you're in a private window, click the {button Turn off Blocking Temporarily} button (see below).
+#*Once Content Blocking is disabled, a shield icon with a strikethrough [[Image:shield icon strikethrough]] will appear in your address bar.
+#To turn content blocking back on, expand Control Center panel by clicking the shield or the site information button [[Image:site info icon]] and click the {button Turn on Blocking for This Site} button.
+
+=Content Blocking in Private Browsing=
+Since [[Private Browsing - Use Firefox without saving history|Private Browsing]] doesn’t save information about your browsing session, when you disable content blocking for a site, it only lasts for your current session. When you start a new private browsing session, your content blocking settings will be restored for all sites. If you’ve disabled content blocking for a site while in a normal browsing window, Firefox will continue to disable content blocking for this same site when in a private window.
+
+=Block lists in Firefox=
+You can change the block list used to block trackers. By default, content blocking uses the [https://disconnect.me Disconnect.me] basic protection list. You can change this to use the Disconnect<!- ->.me strict protection list instead.
+*The basic protection list blocks commonly known analytics trackers, social sharing trackers, and advertising trackers. However, the basic protection list allows some known content trackers so that fewer pages break or fail to load.
+*The strict protection list blocks all known trackers, including analytics trackers, social sharing trackers, and advertising trackers as well as content trackers. The strict list will break some videos, photo slideshows, and social networking features.
+
+==Change your block list==
+#Click the menu button [[Image:fx57menu]].
+#Select {menu Content Blocking}.
+#Select {menu Custom}.
+#Click the '''Change block list''' link.
+#Choose the block list you want to use.
+#;{for not fx66}[[Image:Fx63BlockLists]]{/for}{for fx66}[[Image:Fx66BlockLists]]{/for}
+#Click {button Save Changes}.
+{/for}
+
+{for not fx65}
+=Turn Content Blocking on or off=
+Content blocking includes settings for trackers and tracking cookies. By default, Firefox blocks trackers only in [[Private Browsing - Use Firefox without saving history|private windows]] and doesn’t block third-party tracking cookies at all. You can change your {for win}options{/for}{for mac,linux}preferences{/for} to block trackers all the time or to not block any content at all. You can also set your {for win}options{/for}{for mac,linux}preferences{/for} to block just third-party tracking cookies or all third-party cookies. 
+
+To change your {for win}options{/for}{for mac,linux}preferences{/for}, click the Firefox menu button [[Image:fx57menu]] and select {menu Content Blocking}. This takes you to your content blocking {for win}options{/for}{for mac,linux}preferences{/for}.
+
+[[Image:Fx63menuContentBlocking]]
+
+*To block trackers for all browsing sessions, change the ''All Detected Trackers'' setting from ''Only in private windows'' to ''Always''. 
+*To turn off Content Blocking for detected trackers, deselect the checkbox for ''All Detected Trackers''.
+*Select the ''Third-Party Cookies'' checkbox to block third-party tracking cookies. To block all third-party cookies, change the setting from ''Trackers (recommended)'' to ''All third-party cookies (may cause websites to break)''. For more information, see [[Disable third-party cookies in Firefox to stop some types of tracking by advertisers]]. <br />'''Note:''' You can also set Firefox to always send websites a ''Do Not Track'' signal. See [[How do I turn on the Do Not Track feature?]] to learn more.
+
+=How to detect when Content Blocking is on=
+When Firefox is blocking content on a website, a shield [[Image:FirefoxShieldIcon]] icon will appear in your address bar.
+
+;[[Image:Fx63ContentBlockingURL]]
+
+Select the information [[Image:Site Info button]] icon or the shield [[Image:FirefoxShieldIcon]] icon to expand the [[Control Center - manage site privacy and security controls|Control Center]] for the site. This provides more information about the type of content Firefox has blocked, such as detected trackers and trackers set by third-party cookies. (The Control Center is also where you manage your permission settings for this site.)
+
+;[[Image:Fx63ContentBlocking-details]]
+
+If trackers or third-party tracking cookies are not found on a site, the Control Center will display the message "No blockable content detected on this page". 
+
+;[[Image:no blockable content 63]]
+
+=Turn Content Blocking off on individual sites=
+Sometimes content blocking can prevent pages or parts of pages from loading. If content blocking interferes with your browsing, you can disable it for the site you are visiting. The shield icon appears in the address bar when Firefox is actively blocking content on a page.
+;[[Image:Fx63ContentBlockingURL]]
+#Select the shield [[Image:FirefoxShieldIcon]] icon or the information [[Image:Site Info button]] icon to expand the Control Center panel.
+#;[[Image:Fx63ContentBlocking-DisableBlocking]]
+#Click the {button Disable Blocking for This Site} button in a normal browsing window or the {button Disable Blocking Temporarily} button in a [[Private Browsing - Use Firefox without saving history|private window]] (see below) to disable blocking for the website. 
+#Once content blocking is disabled, a shield icon with a strikethrough will appear in your address bar.
+#;[[Image:blocking disabled 63]]
+#To resume content blocking, expand the Control Center panel and select {button Enable Blocking For This Site}.
+
+=Content Blocking in Private Browsing=
+Since [[Private Browsing - Use Firefox without saving history|Private Browsing]] doesn’t save information about your browsing session, when you disable content blocking for a site, it only lasts for your current session. When you start a new private browsing session, your content blocking settings will be restored for all sites. If you’ve disabled content blocking for a site while in a normal browsing window, Firefox will continue to disable content blocking for this same site when in a private window.
+
+==Turn Content Blocking on or off in private windows==
+Content blocking is turned on by default in [[Private Browsing - Use Firefox without saving history|Private Browsing]] windows.
+
+[[Image:Fx63PrivateBrowsingHomePage-ContentBlockingON]]
+
+Click the switch next to content blocking on the Private Browsing home page to turn it off or back on. If you don't see a content blocking switch, it means that you've set Firefox to always block all detected trackers for all browsing sessions ([[#w_turn-content-blocking-on-or-off|see above]]). 
+
+=Block lists in Firefox=
+You can change the block list used to block trackers. By default, content blocking uses the Disconnect.me basic protection list. You can change this to use the Disconnect.me strict protection list instead.
+*The basic protection list blocks commonly known analytics trackers, social sharing trackers, and advertising trackers. However, the basic protection list allows some known content trackers so that fewer pages break or fail to load.
+*The strict protection list blocks all known trackers, including analytics trackers, social sharing trackers and advertising trackers as well as content trackers. The strict list will break some videos, photo slideshows, and social networking features.
+
+==Change your block list==
+#Expand the main Firefox menu button [[Image:fx57menu]] and select {menu Content Blocking}.
+#Click the '''Change block list''' link.
+#Choose the block list you want to use.
+#Click {button Save Changes}.
+;[[Image:Fx63BlockLists]]
+{/for}
