@@ -7,14 +7,18 @@
 
 Usage:
   mediawiki.py --input <inputfilename>
+  mediawiki.py --input <inputfilename> --outdir <outputDirname>
   mediawiki.py --input <inputfilename> --lang <outputlanguages>
-  mediawiki.py --dir <dirname>
-  mediawiki.py --dir <dirname> --lang <outputlanguages>
+  mediawiki.py --input <inputfilename> --lang <outputlanguages> --outdir <outputDirname>
+  mediawiki.py --indir <inputDirname>
+  mediawiki.py --indir <inputDirname> --outdir <outputDirname>
+  mediawiki.py --indir <inputDirname> --lang <outputlanguages> --outdir <outputDirname>
   mediawiki.py -h | --help
 
 Options:
   --input       Input mediawiki file.
-  --dir         Directory that has one or more input mediawiki files in it.
+  --indir       Input directory that has one or more input mediawiki files in it.
+  --outdir      Output directory where the output files are written to.
   --lang        The name of the output language to translate into.
   -h --help     Show this help menu.
 """
@@ -186,6 +190,10 @@ def main():
     # Get the input file from the user.
     inputArgs = docopt.docopt(__doc__)
 
+    # Add a slash to the end of the output dir if it has been provided.
+    if inputArgs['--outdir']:
+        inputArgs['<outputDirname>'] = addSlashToDir(inputArgs['<outputDirname>'])
+
     # Check for the required input argument.
     if inputArgs['--input']:
         try:
@@ -204,9 +212,11 @@ def main():
                         return ERROR_LANGUAGE_NOT_SUPPORTED
 
                     mediawikiParser = WikiParser.WikiParser(inputFilename = inputArgs['<inputfilename>'],
-                                                            outputLanguage = currentLang)
+                                                            outputLanguage = currentLang,
+                                                            outputDirname= inputArgs.get("<outputDirname>", None))
             else:
-                mediawikiParser = WikiParser.WikiParser(inputFilename = inputArgs['<inputfilename>'])
+                mediawikiParser = WikiParser.WikiParser(inputFilename = inputArgs['<inputfilename>'],
+                                                        outputDirname= inputArgs.get("<outputDirname>", None))
 
         except ValueError as exception:
             # what was the details of the error.
@@ -214,17 +224,17 @@ def main():
             return ERROR_FILE_DOES_NOT_EXIST
 
 
-    if inputArgs['--dir']:
-        if not os.path.exists(inputArgs['<dirname>']):
-            print "Error: Input directory (" + str(inputArgs['<dirname>']) + ") does not exist."
+    if inputArgs['--indir']:
+        if not os.path.exists(inputArgs['<inputDirname>']):
+            print "Error: Input directory (" + str(inputArgs['<inputDirname>']) + ") does not exist."
             return ERROR_DIRECTORY_DOES_NOT_EXIST
 
-        if not os.path.isdir(inputArgs['<dirname>']):
-            print "Error: Input directory (" + str(inputArgs['<dirname>']) + ") is not a directory."
+        if not os.path.isdir(inputArgs['<inputDirname>']):
+            print "Error: Input directory (" + str(inputArgs['<inputDirname>']) + ") is not a directory."
             return ERROR_DIRECTORY_DOES_NOT_EXIST
 
         # Get a list of files in the dir.
-        inputDir = addSlashToDir(inputArgs['<dirname>'])
+        inputDir = addSlashToDir(inputArgs['<inputDirname>'])
 
         # Find the list of all the files in the input directory so that we can parse them one at a time.
         listOfInputFiles =  os.listdir(inputDir)
@@ -248,9 +258,11 @@ def main():
                         return ERROR_LANGUAGE_NOT_SUPPORTED
 
                     mediawikiParser = WikiParser.WikiParser(inputFilename = inputDir + currentFile,
-                                                            outputLanguage = currentLang)
+                                                            outputLanguage = currentLang,
+                                                            outputDirname= inputArgs.get("<outputDirname>", None))
             else:
-                mediawikiParser = WikiParser.WikiParser(inputFilename = inputDir + currentFile)
+                mediawikiParser = WikiParser.WikiParser(inputFilename = inputDir + currentFile,
+                                                        outputDirname= inputArgs.get("<outputDirname>", None))
 
     # DEBUG: Report the data structure of special sequences.
     # mediawikiParser.printWikiParser()

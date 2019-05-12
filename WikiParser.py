@@ -63,7 +63,8 @@ class WikiParser(object):
 
     # Constructor.
     # Default Language is used if nothing specified.
-    def __init__(self, inputFilename, outputLanguage=DEFAULT_OUTPUT_LANGUAGE, inputLanguage=DEFAULT_INPUT_LANGUAGE):
+    def __init__(self, inputFilename, outputLanguage=DEFAULT_OUTPUT_LANGUAGE,
+                 inputLanguage=DEFAULT_INPUT_LANGUAGE, outputDirname=None):
 
         # Check the input arguments.
         if not inputFilename:
@@ -81,11 +82,27 @@ class WikiParser(object):
         if outputLanguage == inputLanguage:
             raise ValueError("Error: Input Language (" + inputLanguage + ") same as output Language (" + outputLanguage + ")")
 
-        # Extract the raw input filename and its extension.
-        rawInputFilename, inputFilenameExtension = os.path.splitext(inputFilename)
+        if outputDirname is None:
 
-        # Construct the output filename.
-        self.mOutputFilename = rawInputFilename + '-' + outputLanguage + inputFilenameExtension
+            # Extract the raw input filename and its extension.
+            rawInputFilename, inputFilenameExtension = os.path.splitext(inputFilename)
+
+            # Construct the output filename.
+            self.mOutputFilename = rawInputFilename + '-' + outputLanguage + inputFilenameExtension
+
+        else:
+
+            # Create the output directory if it does not already exist.
+            if not os.path.exists(outputDirname):
+                os.makedirs(outputDirname)
+
+            # Extract the file from its current directory.
+            rawInputPath, inputFilenameWithExtension = os.path.split(inputFilename)
+
+            # Extract the raw input filename and its extension.
+            rawInputFilename, inputFilenameExtension = os.path.splitext(inputFilenameWithExtension)
+
+            self.mOutputFilename = outputDirname + rawInputFilename + '-' + outputLanguage + inputFilenameExtension
 
         # Keep track of the input filename.
         self.mInputFilename = inputFilename
