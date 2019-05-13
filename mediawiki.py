@@ -12,6 +12,7 @@ Usage:
   mediawiki.py --input <inputfilename> --lang <outputlanguages> --outdir <outputDirname>
   mediawiki.py --indir <inputDirname>
   mediawiki.py --indir <inputDirname> --outdir <outputDirname>
+  mediawiki.py --indir <inputDirname> --lang <outputlanguages>
   mediawiki.py --indir <inputDirname> --lang <outputlanguages> --outdir <outputDirname>
   mediawiki.py -h | --help
 
@@ -33,116 +34,14 @@ import os
 # Custom Mediawiki file package.
 import WikiParser
 
+# Common data.
+import WikiData
+
 # Non-zero error codes.
 ERROR_FILE_DOES_NOT_EXIST = 1
 ERROR_LANGUAGE_NOT_SUPPORTED = 2
 ERROR_DIRECTORY_DOES_NOT_EXIST = 3
 
-# Languages that we support.
-SUPPORTED_LANGUAGES = {"af": "Afrikaans",
-                       "sq": "Albanian",
-                       "am": "Amharic",
-                       "ar": "Arabic",
-                       "hy": "Armenian",
-                       "az": "Azerbaijani",
-                       "eu": "Basque",
-                       "be": "Belarusian",
-                       "bn": "Bengali",
-                       "bs": "Bosnian",
-                       "bg": "Bulgarian",
-                       "ca": "Catalan",
-                       "ceb": "Cebuano(ISO-639-2)",
-                       "zh-CN": "Chinese(Simplified)(BCP-47)",
-                       "zh-TW": "Chinese(Traditional)(BCP-47)",
-                       "co": "Corsican",
-                       "hr": "Croatian",
-                       "cs": "Czech",
-                       "da": "Danish",
-                       "nl": "Dutch",
-                       "en": "English",
-                       "eo": "Esperanto",
-                       "et": "Estonian",
-                       "fi": "Finnish",
-                       "fr": "French",
-                       "fy": "Frisian",
-                       "gl": "Galician",
-                       "ka": "Georgian",
-                       "de": "German",
-                       "el": "Greek",
-                       "gu": "Gujarati",
-                       "ht": "Haitian Creole",
-                       "ha": "Hausa",
-                       "haw": "Hawaiian(ISO-639-2)",
-                       "hi": "Hindi",
-                       "hmn": "Hmong(ISO-639-2)",
-                       "hu": "Hungarian",
-                       "is": "Icelandic",
-                       "ig": "Igbo",
-                       "id": "Indonesian",
-                       "ga": "Irish",
-                       "it": "Italian",
-                       "ja": "Japanese",
-                       "jw": "Javanese",
-                       "kn": "Kannada",
-                       "kk": "Kazakh",
-                       "km": "Khmer",
-                       "ko": "Korean",
-                       "ku": "Kurdish",
-                       "ky": "Kyrgyz",
-                       "lo": "Lao",
-                       "la": "Latin",
-                       "lv": "Latvian",
-                       "lt": "Lithuanian",
-                       "lb": "Luxembourgish",
-                       "mk": "Macedonian",
-                       "mg": "Malagasy",
-                       "ms": "Malay",
-                       "ml": "Malayalam",
-                       "mt": "Maltese",
-                       "mi": "Maori",
-                       "mr": "Marathi",
-                       "mn": "Mongolian",
-                       "my": "Myanmar(Burmese)",
-                       "ne": "Nepali",
-                       "no": "Norwegian",
-                       "ny": "Nyanja(Chichewa)",
-                       "ps": "Pashto",
-                       "fa": "Persian",
-                       "pl": "Polish",
-                       "pt": "Portuguese(Portugal, Brazil)",
-                       "pa": "Punjabi",
-                       "ro": "Romanian",
-                       "ru": "Russian",
-                       "sm": "Samoan",
-                       "gd": "Scots Gaelic",
-                       "sr": "Serbian",
-                       "st": "Sesotho",
-                       "sn": "Shona",
-                       "sd": "Sindhi",
-                       "si": "Sinhala(Sinhalese)",
-                       "sk": "Slovak",
-                       "sl": "Slovenian",
-                       "so": "Somali",
-                       "es": "Spanish",
-                       "su": "Sundanese",
-                       "sw": "Swahili",
-                       "sv": "Swedish",
-                       "tl": "Tagalog (Filipino)",
-                       "tg": "Tajik",
-                       "ta": "Tamil",
-                       "te": "Telugu",
-                       "th": "Thai",
-                       "tr": "Turkish",
-                       "uk": "Ukrainian",
-                       "ur": "Urdu",
-                       "uz": "Uzbek",
-                       "vi": "Vietnamese",
-                       "cy": "Welsh",
-                       "xh": "Xhosa",
-                       "yi": "Yiddish",
-                       "yo": "Yoruba",
-                       "zu": "Zulu"
-                   }
 
 #
 # Add a slash to the end of the directory name,
@@ -164,6 +63,9 @@ def addSlashToDir(inDir):
     return outDir
 
 
+#
+# Create a friendly human readable string of the currently supported languages.
+#
 def supportedLanguagesString():
 
 
@@ -172,7 +74,7 @@ def supportedLanguagesString():
 
     # Sort the list of supported languages by their human readable value not their key.
     # As some languages have a weird key like Spanish='es' or German='de'
-    for supportedLangKey, supportedLangVal in sorted(SUPPORTED_LANGUAGES.iteritems(), key=lambda x: x[1]):
+    for supportedLangKey, supportedLangVal in sorted(WikiData.SUPPORTED_LANGUAGES.iteritems(), key=lambda x: x[1]):
         # Only report the languages that we have name for otherwise we have not idea
         # what language this is.
         if supportedLangVal != "":
@@ -206,7 +108,7 @@ def main():
                 # User has asked for an output language just need to verify it is allowed.
                 for currentLang in multiLang:
 
-                    if not (currentLang in SUPPORTED_LANGUAGES.keys()):
+                    if not (currentLang in WikiData.SUPPORTED_LANGUAGES.keys()):
                         print "Error: Language (" + inputArgs["<outputlanguages>"] + ") not supported."
                         print "Supported are: " + str(supportedLanguagesString())
                         return ERROR_LANGUAGE_NOT_SUPPORTED
@@ -253,7 +155,7 @@ def main():
                 # User has asked for an output language just need to verify it is allowed.
                 for currentLang in multiLang:
 
-                    if not (currentLang in SUPPORTED_LANGUAGES.keys()):
+                    if not (currentLang in WikiData.SUPPORTED_LANGUAGES.keys()):
                         print "Error: Language (" + inputArgs["<outputlanguages>"] + ") not supported."
 
                         print "Supported are: " + str(supportedLanguagesString())
@@ -273,6 +175,7 @@ def main():
 
     # End of main.
     return
+
 
 #
 # Main driver for Cross-Check.

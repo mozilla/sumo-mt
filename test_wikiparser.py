@@ -45,7 +45,7 @@ class TestWikiParser(unittest.TestCase):
         # Build the Device Under Test.
         self.dut = WikiParser.WikiParser(expectedFilename)
 
-        assert self.dut.getInputFilename() == expectedFilename
+        assert self.dut.mInputFilename == expectedFilename
 
     ##### Now lets test the parsing of some simple lines ###
 
@@ -61,6 +61,157 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
+                     "emptyLine": False}
+
+        # Build the Device Under Test.
+        self.dut = WikiParser.WikiParser(expectedFilename)
+
+        self.dut.processMediaWikiLine(inputLine)
+
+        currentPattern = re.compile(expectedSequence, re.IGNORECASE)
+        currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
+
+        assert len(currentMatch) == 1
+
+    def test_template_open_extensions(self):
+
+        # Expected outputs.
+        expectedRawFilename = "orig_input"
+        expectedFilename = expectedRawFilename + ".txt"
+        expectedSequence = "\d+\-\d+"
+
+        inputLine = {"originalLine": "#[[Template:openextensions]]",
+                     "translatedLine": "",
+                     "lineNumber": 99,
+                     "sequenceLine": "",
+                     "sequences": [],
+                     "usedSequenceNumbers": [],
+                     "emptyLine": False}
+
+        # Build the Device Under Test.
+        self.dut = WikiParser.WikiParser(expectedFilename)
+
+        self.dut.processMediaWikiLine(inputLine)
+
+        currentPattern = re.compile(expectedSequence, re.IGNORECASE)
+        currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
+
+        assert len(currentMatch) == 1
+
+    def test_hash_star_string(self):
+
+        # Expected outputs.
+        expectedRawFilename = "orig_input"
+        expectedFilename = expectedRawFilename + ".txt"
+        expectedSequence = "\#\*[\s\w]+\."
+
+        inputLine = {"originalLine": "#*This will open a panel where you can manage extension settings.",
+                     "translatedLine": "",
+                     "lineNumber": 99,
+                     "sequenceLine": "",
+                     "sequences": [],
+                     "usedSequenceNumbers": [],
+                     "emptyLine": False}
+
+        # Build the Device Under Test.
+        self.dut = WikiParser.WikiParser(expectedFilename)
+
+        self.dut.processMediaWikiLine(inputLine)
+
+        currentPattern = re.compile(expectedSequence, re.IGNORECASE)
+        currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
+
+        assert len(currentMatch) == 1
+
+    def test_double_quotes(self):
+
+        # Expected outputs.
+        expectedRawFilename = "orig_input"
+        expectedFilename = expectedRawFilename + ".txt"
+        expectedSequence = "[\s\w]+\,[\s\w]+\.[\s\w]+\d+\-\d+\s*\,[\s\w]+"
+
+        inputLine = {"originalLine": "Underneath the description of the extension, you will see extension settings. Next to ''Run in Private Windows'', select",
+                     "translatedLine": "",
+                     "lineNumber": 99,
+                     "sequenceLine": "",
+                     "sequences": [],
+                     "usedSequenceNumbers": [],
+                     "emptyLine": False}
+
+        # Build the Device Under Test.
+        self.dut = WikiParser.WikiParser(expectedFilename)
+
+        self.dut.processMediaWikiLine(inputLine)
+
+        currentPattern = re.compile(expectedSequence, re.IGNORECASE)
+        currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
+
+        assert len(currentMatch) == 1
+
+    def test_template_table_of_contents(self):
+
+        # Expected outputs.
+        expectedRawFilename = "orig_input"
+        expectedFilename = expectedRawFilename + ".txt"
+        expectedSequence = "\d+\-\d+"
+
+        inputLine = {"originalLine": "__TOC__",
+                     "translatedLine": "",
+                     "lineNumber": 99,
+                     "sequenceLine": "",
+                     "sequences": [],
+                     "usedSequenceNumbers": [],
+                     "emptyLine": False}
+
+        # Build the Device Under Test.
+        self.dut = WikiParser.WikiParser(expectedFilename)
+
+        self.dut.processMediaWikiLine(inputLine)
+
+        currentPattern = re.compile(expectedSequence, re.IGNORECASE)
+        currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
+
+        assert len(currentMatch) == 1
+
+    def test_template_button(self):
+
+        # Expected outputs.
+        expectedRawFilename = "orig_input"
+        expectedFilename = expectedRawFilename + ".txt"
+        expectedSequence = "[\s\w]+\{\s*\d+\-\d+\s*\}[\s\w]+\."
+
+        inputLine = {"originalLine": "to add a check mark and then click on the {button Okay, Got It} bar.",
+                     "translatedLine": "",
+                     "lineNumber": 99,
+                     "sequenceLine": "",
+                     "sequences": [],
+                     "usedSequenceNumbers": [],
+                     "emptyLine": False}
+
+        # Build the Device Under Test.
+        self.dut = WikiParser.WikiParser(expectedFilename)
+
+        self.dut.processMediaWikiLine(inputLine)
+
+        currentPattern = re.compile(expectedSequence, re.IGNORECASE)
+        currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
+
+        assert len(currentMatch) == 1
+
+    def test_equals_string_equals(self):
+
+        # Expected outputs.
+        expectedRawFilename = "orig_input"
+        expectedFilename = expectedRawFilename + ".txt"
+        expectedSequence = "\d+\-\d+"
+
+        inputLine = {"originalLine": "=Extensions in private windows=",
+                     "translatedLine": "",
+                     "lineNumber": 99,
+                     "sequenceLine": "",
+                     "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -85,6 +236,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -109,6 +261,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -133,6 +286,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -157,6 +311,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -181,6 +336,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -192,6 +348,32 @@ class TestWikiParser(unittest.TestCase):
         currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
 
         assert len(currentMatch) == 1
+
+    def test_image_with_tag(self):
+
+        # Expected outputs.
+        expectedRawFilename = "orig_input"
+        expectedFilename = expectedRawFilename + ".txt"
+        expectedSequence = "\d+\-\d+"
+
+        inputLine = {"originalLine": ";[[Image:Fx67ExtensionInstall-AllowPrivate]]",
+                     "translatedLine": "",
+                     "lineNumber": 99,
+                     "sequenceLine": "",
+                     "sequences": [],
+                     "usedSequenceNumbers": [],
+                     "emptyLine": False}
+
+        # Build the Device Under Test.
+        self.dut = WikiParser.WikiParser(expectedFilename)
+
+        self.dut.processMediaWikiLine(inputLine)
+
+        currentPattern = re.compile(expectedSequence, re.IGNORECASE)
+        currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
+
+        assert len(currentMatch) == 1
+
 
     def test_brackets_http(self):
 
@@ -205,6 +387,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -229,6 +412,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -253,6 +437,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
