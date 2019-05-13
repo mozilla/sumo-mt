@@ -265,4 +265,52 @@ class TestWikiParser(unittest.TestCase):
 
         assert len(currentMatch) == 1
 
+    def test_http_inside_a_comment(self):
+
+        # Expected outputs.
+        expectedRawFilename = "orig_input"
+        expectedFilename = expectedRawFilename + ".txt"
+        expectedSequence = "\s*\d+\-\d+[\s\w]+\,[\s\w]+https\:\/\/support\.mozilla\.org\/en\-US\/kb\/get\-started\-firefox\-overview\-main\-features\/discuss\/7308\s*\d+\-\d+\s*"
+
+        inputLine = {"originalLine": "<!-- The next two surveys are ONLY for the US, see https://support.mozilla.org/en-US/kb/get-started-firefox-overview-main-features/discuss/7308-->",
+                     "translatedLine": "",
+                     "lineNumber": 99,
+                     "sequenceLine": "",
+                     "sequences": [],
+                     "emptyLine": False}
+
+        # Build the Device Under Test.
+        self.dut = WikiParser.WikiParser(expectedFilename)
+
+        self.dut.processMediaWikiLine(inputLine)
+
+        currentPattern = re.compile(expectedSequence, re.IGNORECASE)
+        currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
+
+        assert len(currentMatch) == 1
+
+    def test_http_inside_a_square_bracket(self):
+
+        # Expected outputs.
+        expectedRawFilename = "orig_input"
+        expectedFilename = expectedRawFilename + ".txt"
+        expectedSequence = "[\s\w]+\d+\-\d+[\s\w]+\."
+
+        inputLine = {"originalLine": "to your [https://getpocket.com/ Pocket] list so you can read them whenever and wherever you want.",
+                     "translatedLine": "",
+                     "lineNumber": 99,
+                     "sequenceLine": "",
+                     "sequences": [],
+                     "emptyLine": False}
+
+        # Build the Device Under Test.
+        self.dut = WikiParser.WikiParser(expectedFilename)
+
+        self.dut.processMediaWikiLine(inputLine)
+
+        currentPattern = re.compile(expectedSequence, re.IGNORECASE)
+        currentMatch = re.findall(currentPattern, inputLine["sequenceLine"])
+
+        assert len(currentMatch) == 1
+
 
