@@ -1,0 +1,57 @@
+Enable and disable cookies that websites use to track your preferences
+
+[[Cookies - Information that websites store on your computer|Cookies]] are stored on your computer by websites you visit and contain information such as site preferences or your login status. This article describes how to enable and disable cookies in Firefox.
+
+__TOC__
+
+= How do I view or change my cookie settings? =
+{note}'''Note: Cookies are enabled by default in Firefox.'''{/note}
+
+{for not fx63}
+# [[T:optionspreferences]]
+# Select the {menu Privacy & Security} panel and go to the '''Cookies and Site Data''' section.
+# Select '''Accept cookies and site data from websites (recommended)''' to enable cookies. To disable cookies, select '''Block cookies and site data (may cause websites to break)'''.
+#;{for =fx60}[[Image:Fx60Settings-CookiesAndSiteData]]{/for}{for =fx61, =fx62}[[Image:Fx61settings-CookiesAndSiteData]]{/for}
+#* If you are troubleshooting problems with websites, make sure that '''Accept third-party cookies and site data''' is NOT set to '''Never'''. For more information, see [[Disable third-party cookies in Firefox to stop some types of tracking by advertisers]].
+# Choose how long cookies are allowed to be stored:
+#* Keep until:<br>{for =fx60}'''they expire'''{/for}{for fx61}'''They expire'''{/for}: Each cookie will be removed when it reaches its expiration date, which is set by the site that sent the cookie.<br>{for =fx60}'''I close Firefox'''{/for}{for fx61}'''Firefox is closed'''{/for}: The cookies that are stored on your computer will be removed when Firefox is closed.
+# [[T:closeOptionsPreferences]]
+{/for}
+{for =fx63, =fx64}
+# [[T:optionspreferences]]
+# Select the {menu Privacy & Security} panel and go to the '''Cookies and Site Data''' section.
+#;[[Image:Fx63settings-AcceptCookies]]
+# Select '''Accept cookies and site data''' to enable cookies. To disable cookies, select '''Block cookies and site data''' and use the drop-down menu next to '''Type blocked''' to choose the type of cookies to block.
+#* If you are troubleshooting problems with websites, make sure that '''Accept third-party cookies and site data''' is NOT set to '''Never'''. For more information, see [[Disable third-party cookies in Firefox to stop some types of tracking by advertisers]].
+# Choose how long cookies are allowed to be stored:
+#* Keep until:<br>'''They expire''': Each cookie will be removed when it reaches its expiration date, which is set by the site that sent the cookie.<br>'''Firefox is closed''': The cookies that are stored on your computer will be removed when Firefox is closed.
+# [[T:closeOptionsPreferences]]
+{/for}
+
+{for fx65}
+Click the menu button [[Image:fx57menu]] and select {menu Content Blocking}. The {menu Privacy & Security} panel of Firefox [[T:optionsorpreferences]] will open. This is where you can view your settings for '''Content Blocking''', which includes cookies.
+;[[Image:fx65ContentBlocking]]
+*If {menu Standard} is selected, it means that you are using the default settings for content blocking and cookies are enabled.
+
+'''To block cookies''':
+Select {menu Custom} and check mark '''Cookies'''. 
+;[[Image:Fx65Custom-ThirdPartyCookies]]
+''Third-Party Trackers'' is the default setting for blocking cookies. Use the drop-down menu to change the type of cookies blocked. Note that disabling cookies can cause problems with websites.  See [[Disable third-party cookies in Firefox to stop some types of tracking by advertisers|this article]] to learn more about third-party cookies.
+
+'''To enable all cookies''', do one of the following:
+* Select {menu Custom} and clear the '''Cookies''' check mark.
+* Alternatively, select {menu Standard} to restore the default settings.
+
+To learn more about these settings, see the [[Content blocking]] article.
+
+= Clear cookies when you close Firefox =
+To remove all cookies and site data when Firefox is closed:
+#[[T:OptionsPreferences]]
+#Select the {menu Privacy & Security} panel and go to the '''Cookies and Site Data''' section.
+#;[[Image:Fx65CookiesAndSiteData]]
+# Check mark ''Delete cookies and site data when Firefox is closed''.
+Each time you close Firefox, the cookies that are stored on your computer will be removed. 
+{/for}
+
+= Websites report cookie errors =
+If a website gives you an error message that cookies must be enabled, make sure that you have not blocked cookies for the website. See [[Block websites from storing cookies and site data in Firefox]] and [[Websites say cookies are blocked - Unblock them]] for more information.

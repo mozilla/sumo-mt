@@ -52,17 +52,17 @@ $ ./mediawiki.py --dir mydir/ --lang 'ru,es'
 
 ## Other notes
 
-Overview
+### Overview
 Translate an input mediawiki file of Spanish and generate an output mediawiki file of English.
 orig_input.txt -> script -> orgi_output.txt
 
-Inputs
+### Inputs
 - input file
 - Language of output file (default: Spanish)
 - Language of output files can be a list of languages eg 'ru,es' would be for Russian and Spanish.
 - input directory - so need to get a list of all files in that directory and then parse each one of them.
 
-Outputs
+### Outputs
 - output file with the name of the file "myfile-es.txt' if the input is "myfile.txt"
 - status
   - success (zero) or
@@ -73,37 +73,48 @@ Outputs
 
 ### Control Flow
 
-1. Open and read input file
-2. Parse input file into a data structure
-3. Send requests to Cloud Translation to perform the language conversion
-4. Create and write to output file
+1. Open and read input file.
+1. Parse input file into a data structure.
+1. Process each line one at a time.
+1. For each line replace special text sequences with a symbol as we may want to translate these separately.
+1. Send requests to Cloud Translation to perform the language conversion.
+1. Create and write to output file.
 
-Error conditions
+#### Error conditions
 - Cannot find input file
 - Empty input file
 - Format of input file not valid according to mediawiki
 - Unable to send requests to Cloud Translation
 - Unable to create output file
 
-Data structure(s)
+#### Data structure(s)
 
-List of objects
-- Object
+##### List of objects
+- Object - for each line in the input file.
+  - Original Line - Original line of text from the input file, in English, say.
+  - Translated Line - The final translated line of text into the requested output language
   - Line number - Line number of the input file.
-  - Sequence - The unique sequence to indicate the special sequence that we don't want to translate.
-  - Original - The original text (in English, say).
+  - Sequence Line - After special sequences of interest within the original line have been replaced with a special squences so that we don't want to translate these.
+  - Sequences - List of the unique sequences in the current line, we may or may not want to translate individually.
+  - Empty Line - Boolean true or false so that we don't ask Google to translate an empty string.
+
+- Object - for each unique sequence for a given line.
+  - sequence - This is a special sequence that looks like 123-456, say.
+  - original - This is the original string before any translations.
+  - translate - Boolean true or false if we would like to translate the sting or leave it in the original language.
+
 
 ### Detailed Design
 
 #### Control Flow
-- Start with the parsing of the input arguments to verify them.
-- Parse over the input file
-- Look at one line at a time
-- Look for specific patterns of interest in the input file and if they are special then remove them from the line and replace them with a unique tag.
-- Then send the remaining line to Google Cloud Translate API
-- Each of the special unique tags replace them with the original content
-- OR some of the special unique tags we need to still translate them but just a bit of their content
-- write the line to the output file
+1. Start with the parsing of the input arguments to verify them.
+1. Parse over the input file
+1. Look at one line at a time
+1. Look for specific patterns of interest in the input file and if they are special then remove them from the line and replace them with a unique tag.
+1. Then send the remaining line to Google Cloud Translate API
+1. Each of the special unique tags replace them with the original content
+1. OR some of the special unique tags we need to still translate them but just a bit of their content
+1. write the line to the output file
 
 #### Data Flow
 - Need to add more details here.
