@@ -40,6 +40,7 @@ class TestWikiTranslation(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "Firefox version",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -63,6 +64,7 @@ class TestWikiTranslation(unittest.TestCase):
                      "sequences": [{"sequence": 123.456,
                                     "original": "Find what version of Firefox you are using",
                                     "translate": False}],
+                     "usedSequenceNumbers": [123.456],
                      "emptyLine": False}
 
         # Build the Device Under Test.

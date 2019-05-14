@@ -4,6 +4,13 @@ This script uses Google Cloud Translate API to translate mediwiki markup files.
 
 ## Requirements
 
+### Python version
+
+```
+$ python --version
+Python 2.7.5
+```
+
 ### Dependencies
 
 ```
@@ -47,8 +54,15 @@ $ ./mediawiki.py --input orig_input.txt --lang unknown
 
 For multiple files in a single directory and we want to generate multiple output languages.
 ```
-$ ./mediawiki.py --dir mydir/ --lang 'ru,es'
+$ ./mediawiki.py --indir myinputdirectory/ --lang 'ru,es'
 ```
+
+If you want to send the translated files to a different directory you can specify an outdir
+```
+$ ./mediawiki.py --indir myinputdirectory/ --lang 'ru,es' --outdir myoutputdirectory/
+```
+
+Note that if the output directory does not already exist, then it is created.
 
 ## Other notes
 
@@ -61,9 +75,10 @@ orig_input.txt -> script -> orgi_output.txt
 - Language of output file (default: Spanish)
 - Language of output files can be a list of languages eg 'ru,es' would be for Russian and Spanish.
 - input directory - so need to get a list of all files in that directory and then parse each one of them.
+- output directory - place the translated files into the output directory.
 
 ### Outputs
-- output file with the name of the file "myfile-es.txt' if the input is "myfile.txt"
+- output file with the name of the file "myfile-es.txt' if the input is "myfile.txt", for a target language of es.
 - status
   - success (zero) or
   - failure (non-zero)
@@ -119,10 +134,23 @@ orig_input.txt -> script -> orgi_output.txt
 #### Data Flow
 - Need to add more details here.
 
-### Testcases
+### Test-cases
 
 Run the local script called runTest.sh
 
 ``$ ./runTests.sh``
 
 This local script uses the package pytest in order to run a suite of unit tests.
+
+#### Run a test suite
+
+Or to run the test suite in verbose mode, for a suite of tests, you can say,
+
+``$ pytest -v test_wikiparser.py``
+
+### Run a single test-case
+
+Or to run just a single testcase called test_filepath_directive, from the test suite TestWikiParser, in verbose mode, you can say,
+
+``$ pytest -v test_wikiparser.py::TestWikiParser::test_filepath_directive``
+

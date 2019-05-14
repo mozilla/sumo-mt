@@ -59,12 +59,10 @@ project_id = googleCredentialsJson['project_id']
 
 class WikiParser(object):
 
-    # TODO: It would be better to have this for each line we process in the file, not as a class variable.
-    listOfUsedNumbers = []
-
     # Constructor.
     # Default Language is used if nothing specified.
-    def __init__(self, inputFilename, outputLanguage=DEFAULT_OUTPUT_LANGUAGE, inputLanguage=DEFAULT_INPUT_LANGUAGE):
+    def __init__(self, inputFilename, outputLanguage=DEFAULT_OUTPUT_LANGUAGE,
+                 inputLanguage=DEFAULT_INPUT_LANGUAGE, outputDirname=None):
 
         # Check the input arguments.
         if not inputFilename:
@@ -84,11 +82,27 @@ class WikiParser(object):
             errStr += " same as output Language (" + outputLanguage + ")"
             raise ValueError(errStr)
 
-        # Extract the raw input filename and its extension.
-        rawInputFilename, inputFilenameExtension = os.path.splitext(inputFilename)
+        if outputDirname is None:
 
-        # Construct the output filename.
-        self.mOutputFilename = rawInputFilename + '-' + outputLanguage + inputFilenameExtension
+            # Extract the raw input filename and its extension.
+            rawInputFilename, inputFilenameExtension = os.path.splitext(inputFilename)
+
+            # Construct the output filename.
+            self.mOutputFilename = rawInputFilename + '-' + outputLanguage + inputFilenameExtension
+
+        else:
+
+            # Create the output directory if it does not already exist.
+            if not os.path.exists(outputDirname):
+                os.makedirs(outputDirname)
+
+            # Extract the file from its current directory.
+            rawInputPath, inputFilenameWithExtension = os.path.split(inputFilename)
+
+            # Extract the raw input filename and its extension.
+            rawInputFilename, inputFilenameExtension = os.path.splitext(inputFilenameWithExtension)
+
+            self.mOutputFilename = outputDirname + rawInputFilename + '-' + outputLanguage + inputFilenameExtension
 
         # Keep track of the input filename.
         self.mInputFilename = inputFilename
@@ -126,21 +140,23 @@ class WikiParser(object):
     #
     # Create a unique random sequence.
     #
-    def giveMeUniqueRandomNumber(self):
+    def giveMeUniqueRandomNumber(self, mediaLine):
 
         bottomRange = 100
         topRange    = 999
 
         # Create an initial random number in the range.
-        currentRandomNumber = str(random.randrange(bottomRange,topRange)) + "-" + str(random.randrange(bottomRange,topRange))
+        currentRandomNumber = str(random.randrange(bottomRange,topRange)) + "-"
+        currentRandomNumber += str(random.randrange(bottomRange,topRange))
 
         # If that number has already been used then pick another one.
-        while currentRandomNumber in WikiParser.listOfUsedNumbers:
+        while currentRandomNumber in mediaLine["usedSequenceNumbers"]:
             # Generate another random number in the range.
-            currentRandomNumber = str(random.randrange(bottomRange,topRange)) + "-" + str(random.randrange(bottomRange,topRange))
+            currentRandomNumber = str(random.randrange(bottomRange,topRange)) + "-"
+            currentRandomNumber += str(random.randrange(bottomRange,topRange))
 
         # Keep track that this number has been used.
-        WikiParser.listOfUsedNumbers.append(currentRandomNumber)
+        mediaLine["usedSequenceNumbers"].append(currentRandomNumber)
 
         # Returned the special unique number.
         return currentRandomNumber
@@ -168,6 +184,7 @@ class WikiParser(object):
                                     "lineNumber": lineCounter,
                                     "sequenceLine": "",
                                     "sequences": [],
+                                    "usedSequenceNumbers": [],
                                     "emptyLine": True
                                 })
             else:
@@ -176,6 +193,7 @@ class WikiParser(object):
                                     "lineNumber": lineCounter,
                                     "sequenceLine": "",
                                     "sequences": [],
+                                    "usedSequenceNumbers": [],
                                     "emptyLine": False
                                 })
 
@@ -307,8 +325,9 @@ class WikiParser(object):
                 # Deal with multiple matches on the same line.
                 for elementMatch in currentMatch:
 
-                    specialSequence = str(self.giveMeUniqueRandomNumber())
-                    mediaLine["sequenceLine"] = mediaLine["sequenceLine"].replace(elementMatch, " " + specialSequence + " ")
+                    specialSequence = str(self.giveMeUniqueRandomNumber(mediaLine))
+                    mediaLine["sequenceLine"] = mediaLine["sequenceLine"].replace(elementMatch,
+                                                                                  " " + specialSequence + " ")
 
                     # Store this match so we can refer to it later.
                     mediaLine["sequences"].append({"sequence": specialSequence,
@@ -330,7 +349,8 @@ class WikiParser(object):
         # some unprintable characters in the translated string.
         response = self.mTranslateClient.translate_text(parent=self.mParent,
                                                         contents=[mediaLine["sequenceLine"]],
-                                                        mime_type='text/html', # Mime types: text/plain, text/html.
+                                                        # Mime types: text/plain, text/html.
+                                                        mime_type='text/html',
                                                         source_language_code=self.mInputLanguage,
                                                         target_language_code=self.mOutputLanguage)
 
@@ -345,7 +365,8 @@ class WikiParser(object):
                 # We can have quotes in the special substitutions so need to 
                 response = self.mTranslateClient.translate_text(parent=self.mParent,
                                                                 contents=[currentSequence['original']],
-                                                                mime_type='text/plain', # Mime types: text/plain, text/html.
+                                                                 # Mime types: text/plain, text/html.
+                                                                mime_type='text/plain',
                                                                 source_language_code=self.mInputLanguage,
                                                                 target_language_code=self.mOutputLanguage)
                 sequenceTranslated = ""
@@ -397,24 +418,32 @@ class WikiParser(object):
 
 
     #
-    #  Helpful to better understand what is inside the data scructure.
+    #  Friendly print of the internals of the WikiParser data scructure.
     #
     def printWikiParser(self, depth=0):
 
         print "###"
-        print "# Filename:\t" + str(self.getInputFilename())
+        print "# Input Filename:\t" + str(self.mInputFilename)
+        print "# Output Filename:\t" + str(self.mOutputFilename)
+        print "# Input Language:\t" + str(self.mInputLanguage)
+        print "# Output Language:\t" + str(self.mOutputLanguage)
+
+        # Report the details of the sequences on this line
         for currentElement in self.mMedia:
+            # Only give details for the non-empty lines in the input file.
             if not currentElement["emptyLine"]:
-                print "  Original:"
+                print "  Original Line:"
                 print "  " + str(currentElement["originalLine"])
+                print "  Sequence Line:"
                 print "  " + str(currentElement["sequenceLine"])
+                print "  Translated Line:"
+                print "  " + currentElement["translatedLine"].encode('utf8')
+                if len(currentElement) > 0:
+                    print "Sequences:"
+
+                # Details about each sequence.
                 for currentSequence in currentElement["sequences"]:
-                    print currentSequence["sequence"]
-                    print currentSequence["original"]
-                    print currentSequence["translate"]
-                    print "---"
-
-
-    # Gettas.
-    def getInputFilename(self):
-        return self.mInputFilename
+                    print "    " + str(currentSequence["sequence"])
+                    print "    " + str(currentSequence["original"])
+                    print "    " + str(currentSequence["translate"])
+                    print "    " + "---"
