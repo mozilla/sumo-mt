@@ -462,6 +462,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
@@ -486,6 +487,7 @@ class TestWikiParser(unittest.TestCase):
                      "lineNumber": 99,
                      "sequenceLine": "",
                      "sequences": [],
+                     "usedSequenceNumbers": [],
                      "emptyLine": False}
 
         # Build the Device Under Test.
