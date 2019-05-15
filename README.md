@@ -33,21 +33,23 @@ Rename ``settings_example`` into ``settings``.
 
 Usage examples:
 
-You don't need to specify a language we can just default to Spanish
-``$ ./mediawiki.py --input orig_input.txt``
+You don't need to specify a language we can just default to Spanish.
+```
+$ ./mediawiki.py --input orig_input.txt
+```
 
-Specify a specific single language
+Specify a specific single language.
 ```
 $ ./mediawiki.py --input orig_input.txt --lang es
 $ ./mediawiki.py --input orig_input.txt --lang ru
 ```
 
-Specify multiple languages for a single file
+Specify multiple languages for a single file.
 ```
 $ ./mediawiki.py --input orig_input.txt --lang 'es,ru'
 ```
 
-Or you can specify a weird language and the error message shall tell you what are supported
+Or you can specify a weird language and the error message shall tell you what are supported.
 ```
 $ ./mediawiki.py --input orig_input.txt --lang unknown
 ```
@@ -57,7 +59,7 @@ For multiple files in a single directory and we want to generate multiple output
 $ ./mediawiki.py --indir myinputdirectory/ --lang 'ru,es'
 ```
 
-If you want to send the translated files to a different directory you can specify an outdir
+If you want to send the translated files to a different directory you can specify an outdir (note that you don't need the slash on the end of the directory names).
 ```
 $ ./mediawiki.py --indir myinputdirectory/ --lang 'ru,es' --outdir myoutputdirectory/
 ```
@@ -96,18 +98,18 @@ orig_input.txt -> script -> orgi_output.txt
 1. Create and write to output file.
 
 #### Error conditions
-- Cannot find input file
-- Empty input file
-- Format of input file not valid according to mediawiki
-- Unable to send requests to Cloud Translation
-- Unable to create output file
+- Cannot find input file.
+- Empty input file.
+- Format of input file not valid according to mediawiki.
+- Unable to send requests to Cloud Translation.
+- Unable to create output file.
 
 #### Data structure(s)
 
 ##### List of objects
 - Object - for each line in the input file.
   - Original Line - Original line of text from the input file, in English, say.
-  - Translated Line - The final translated line of text into the requested output language
+  - Translated Line - The final translated line of text into the requested output language.
   - Line number - Line number of the input file.
   - Sequence Line - After special sequences of interest within the original line have been replaced with a special squences so that we don't want to translate these.
   - Sequences - List of the unique sequences in the current line, we may or may not want to translate individually.
@@ -123,22 +125,24 @@ orig_input.txt -> script -> orgi_output.txt
 
 #### Control Flow
 1. Start with the parsing of the input arguments to verify them.
-1. Parse over the input file
-1. Look at one line at a time
+1. Parse over the input file.
+1. Look at one line at a time.
 1. Look for specific patterns of interest in the input file and if they are special then remove them from the line and replace them with a unique tag.
-1. Then send the remaining line to Google Cloud Translate API
-1. Each of the special unique tags replace them with the original content
-1. OR some of the special unique tags we need to still translate them but just a bit of their content
-1. write the line to the output file
+1. Then send the remaining line to Google Cloud Translate API.
+1. Each of the special unique tags replace them with the original content.
+1. OR some of the special unique tags we need to still translate them but just a bit of their content.
+1. write the line to the output file.
 
 #### Data Flow
 - Need to add more details here.
 
 ### Test-cases
 
-Run the local script called runTest.sh
+Run the local script called runTest.sh.
 
-``$ ./runTests.sh``
+```
+$ ./runTests.sh
+```
 
 This local script uses the package pytest in order to run a suite of unit tests.
 
@@ -146,11 +150,15 @@ This local script uses the package pytest in order to run a suite of unit tests.
 
 Or to run the test suite in verbose mode, for a suite of tests, you can say,
 
-``$ pytest -v test_wikiparser.py``
+```
+$ pytest -v test_wikiparser.py
+```
 
 ### Run a single test-case
 
 Or to run just a single testcase called test_filepath_directive, from the test suite TestWikiParser, in verbose mode, you can say,
 
-``$ pytest -v test_wikiparser.py::TestWikiParser::test_filepath_directive``
+```
+$ pytest -v test_wikiparser.py::TestWikiParser::test_filepath_directive
+```
 

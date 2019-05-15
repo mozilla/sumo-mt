@@ -280,7 +280,7 @@ class WikiParser(object):
                                          "translate": False},
                                         {"pattern":"\[\[Video\:[\w\s\:\/\.\_]+\]\]",
                                          "translate": False},
-                                        {"pattern":"\[\[([\s\w\-\_\#\,\"]+)\|[\w\s]+\]\]",
+                                        {"pattern":"\[\[([\s\w\-\_\#\,\"\?]+)\|[\w\s\,\"]+\]\]",
                                          "translate": False},
                                         {"pattern":"\[\[T\:[\w\s\-\|\=\_]+\]\]",
                                          "translate": False},
@@ -312,6 +312,8 @@ class WikiParser(object):
                                          "translate": False},
                                         {"pattern":"(\"[\s\w\-\_\#\,\.\?\:\>\<\/]+\")",
                                          "translate": True},
+                                        {"pattern":"(\'\'http[\s\w\-\_\#\,\.\?\:\>\<\/]+\'\')",
+                                         "translate": False},
                                     ]
 
         # Patterns we want to replace with a special unique tag then we can put it back after
