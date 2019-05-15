@@ -171,7 +171,7 @@ def main():
                 mediawikiParser.readProcessTranslateWrite()
 
     # DEBUG: Report the data structure of special sequences.
-    # mediawikiParser.printWikiParser()
+    mediawikiParser.printWikiParser()
 
     # End of main.
     return
