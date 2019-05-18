@@ -20,10 +20,10 @@ $ pip install configparser
 
 ### Google Cloud Translate set-up
 [Set-up Google Cloud translate](https://cloud.google.com/translate/docs/quickstart-v3)
-- Create a project
-- Enable Translation API
-- Create a service account with Translate permissions
-- Download the private key as ``credentials.json`` in this same folder
+- Create a project.
+- Enable Translation API.
+- Create a service account with Translate permissions.
+- Download the Google Cloud private key as ``credentials.json``, say, in this same folder.
 
 ### Settings
 
@@ -33,7 +33,7 @@ Rename ``settings_example`` into ``settings``.
 
 Usage examples:
 
-You don't need to specify a language we can just default to Spanish.
+You don't need to specify a language we can just default to the language that is specified in your settings file.
 ```
 $ ./mediawiki.py --input orig_input.txt
 ```
@@ -61,10 +61,16 @@ $ ./mediawiki.py --indir myinputdirectory/ --lang 'ru,es'
 
 If you want to send the translated files to a different directory you can specify an outdir (note that you don't need the slash on the end of the directory names).
 ```
-$ ./mediawiki.py --indir myinputdirectory/ --lang 'ru,es' --outdir myoutputdirectory/
+$ ./mediawiki.py --indir my-input-directory/ --lang 'ru,es' --outdir my-output-directory/
 ```
 
 Note that if the output directory does not already exist, then it is created.
+
+If you want to have your settings file named something other than the default value of ``settings`` then you can provide this.
+```
+$ ./mediawiki.py --indir my-input-directory/ --lang 'ru,es' --outdir my-output-directory/ --settings custom-settings-filename.txt
+```
+
 
 ## Other notes
 
@@ -73,11 +79,12 @@ Translate an input mediawiki file of Spanish and generate an output mediawiki fi
 orig_input.txt -> script -> orgi_output.txt
 
 ### Inputs
-- input file
-- Language of output file (default: Spanish)
+- Input input-filename - Input mediawiki file.
+- Language of output file (default language is specified in ``settings`` file)
 - Language of output files can be a list of languages eg 'ru,es' would be for Russian and Spanish.
-- input directory - so need to get a list of all files in that directory and then parse each one of them.
-- output directory - place the translated files into the output directory.
+- Input directory - so need to get a list of all files in that directory and then parse each one of them.
+- Output directory - place all the translated files into the output directory.
+- Input settings file - provides custom default languages and location of Google App API credentials JSON file.
 
 ### Outputs
 - output file with the name of the file "myfile-es.txt' if the input is "myfile.txt", for a target language of es.
