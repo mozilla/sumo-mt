@@ -6,24 +6,17 @@
   mediawiki - Translate the language of a mediawiki file.
 
 Usage:
-  mediawiki.py --input <inputfilename>
-  mediawiki.py --input <inputfilename> --outdir <outputDirname>
-  mediawiki.py --input <inputfilename> --lang <outputlanguages>
-  mediawiki.py --input <inputfilename> --lang <outputlanguages> --outdir <outputDirname>
-  mediawiki.py --indir <inputDirname>
-  mediawiki.py --indir <inputDirname> --outdir <outputDirname>
-  mediawiki.py --indir <inputDirname> --lang <outputlanguages>
-  mediawiki.py --indir <inputDirname> --lang <outputlanguages> --outdir <outputDirname>
+  mediawiki.py (--input <input-filename>|--indir <input-directory-name>) [--settings <settings-filename>] [--lang <output-languages> ] [--outdir <output-directory-name> ]
   mediawiki.py -h | --help
 
 Options:
-  --input       Input mediawiki file.
-  --indir       Input directory that has one or more input mediawiki files in it.
-  --outdir      Output directory where the output files are written to.
-  --lang        The name of the output language to translate into.
-  -h --help     Show this help menu.
+  --input <input-filename>            Input mediawiki file.
+  --indir <input-directory-name>      Input directory that has one or more input mediawiki files in it.
+  --lang <output-languages>           The name of the output target language to translate into.
+  --outdir <output-directory-name>    Output directory where the translated output files are written to.
+  --settings <settings-filename>      Mediawiki settings file, copy example_settings to get started. [default: settings]
+  -h --help                           Show this help menu.
 """
-
 
 # Parse input arguments into this script.
 import docopt
@@ -31,17 +24,20 @@ import docopt
 # Access operating system libraries to check if file or directory exist.
 import os
 
+# Custom common data.
+import WikiData
+
+# Custom settings.
+import WikiSettings
+
 # Custom Mediawiki file package.
 import WikiParser
 
-# Common data.
-import WikiData
 
 # Non-zero error codes.
 ERROR_FILE_DOES_NOT_EXIST = 1
 ERROR_LANGUAGE_NOT_SUPPORTED = 2
 ERROR_DIRECTORY_DOES_NOT_EXIST = 3
-
 
 #
 # Add a slash to the end of the directory name,
@@ -84,6 +80,7 @@ def supportedLanguagesString():
     return friendlySupportedLanguages[:-1]
 
 
+
 #
 # Translate the language of the mediawiki file.
 #
@@ -92,83 +89,73 @@ def main():
     # Get the input file from the user.
     inputArgs = docopt.docopt(__doc__)
 
+    # Deal with the settings file.
+    try:
+        inputLangDefault, outputLangDefault, location, projectId = WikiSettings.extractSettings(inputArgs["--settings"])
+    except ValueError as exception:
+        print exception
+        return ERROR_FILE_DOES_NOT_EXIST
+
     # Add a slash to the end of the output dir if it has been provided.
-    if inputArgs['--outdir']:
-        inputArgs['<outputDirname>'] = addSlashToDir(inputArgs['<outputDirname>'])
+    if inputArgs["--outdir"]:
+        inputArgs["--outdir"] = addSlashToDir(inputArgs["--outdir"])
 
-    # Check for the required input argument.
+    # Start with the default output language from the settings file.
+    multiLang = outputLangDefault.rsplit(',')
+
+    # Build up a list of languages.
+    if inputArgs["--lang"]:
+        multiLang = inputArgs["--lang"].rsplit(',')
+
+    # Build up a list of input filenames.
+    multiFiles = []
+
+    # User has asked for an output target language just need to verify it is allowed.
+    for currentLang in multiLang:
+
+        if not (currentLang in WikiData.SUPPORTED_LANGUAGES.keys()):
+            print "Error: Language (" + currentLang + ") not supported."
+            print "Supported are: " + str(supportedLanguagesString())
+            return ERROR_LANGUAGE_NOT_SUPPORTED
+
+    # Get a single input filename, if provided.
     if inputArgs['--input']:
-        try:
-            # Parse the mediawiki file and store into a local data structure
-            # Verify the language that the user has provided.
-            if inputArgs['--lang']:
+        multiFiles.append(inputArgs['--input'])
 
-                multiLang = inputArgs["<outputlanguages>"].rsplit(',')
-
-                # User has asked for an output language just need to verify it is allowed.
-                for currentLang in multiLang:
-
-                    if not (currentLang in WikiData.SUPPORTED_LANGUAGES.keys()):
-                        print "Error: Language (" + inputArgs["<outputlanguages>"] + ") not supported."
-                        print "Supported are: " + str(supportedLanguagesString())
-                        return ERROR_LANGUAGE_NOT_SUPPORTED
-
-                    mediawikiParser = WikiParser.WikiParser(inputFilename = inputArgs['<inputfilename>'],
-                                                            outputLanguage = currentLang,
-                                                            outputDirname= inputArgs.get("<outputDirname>", None))
-                    mediawikiParser.readProcessTranslateWrite()
-            else:
-                mediawikiParser = WikiParser.WikiParser(inputFilename = inputArgs['<inputfilename>'],
-                                                        outputDirname= inputArgs.get("<outputDirname>", None))
-                mediawikiParser.readProcessTranslateWrite()
-
-        except ValueError as exception:
-            # what was the details of the error.
-            print exception
-            return ERROR_FILE_DOES_NOT_EXIST
-
-
-    if inputArgs['--indir']:
-        if not os.path.exists(inputArgs['<inputDirname>']):
-            print "Error: Input directory (" + str(inputArgs['<inputDirname>']) + ") does not exist."
+    # Get several input filenames from the directory, if provided.
+    if inputArgs["--indir"]:
+        if not os.path.exists(inputArgs["--indir"]):
+            print "Error: Input directory (" + str(inputArgs["--indir"]) + ") does not exist."
             return ERROR_DIRECTORY_DOES_NOT_EXIST
 
-        if not os.path.isdir(inputArgs['<inputDirname>']):
-            print "Error: Input directory (" + str(inputArgs['<inputDirname>']) + ") is not a directory."
+        if not os.path.isdir(inputArgs["--indir"]):
+            print "Error: Input directory (" + str(inputArgs["--indir"]) + ") is not a directory."
             return ERROR_DIRECTORY_DOES_NOT_EXIST
 
         # Get a list of files in the dir.
-        inputDir = addSlashToDir(inputArgs['<inputDirname>'])
+        inputDir = addSlashToDir(inputArgs["--indir"])
 
         # Find the list of all the files in the input directory so that we can parse them one at a time.
-        listOfInputFiles =  os.listdir(inputDir)
+        multiFiles = ['{0}{1}'.format(inputDir, element) for element in os.listdir(inputDir)]
 
-        # Run the parser over each of the files in the sub-directory.
-        for currentFile in listOfInputFiles:
+    # Finally perform the translation for each input file for each language.
+    try:
+        for currentFile in multiFiles:
+            for currentLang in multiLang:
+                mediawikiParser = WikiParser.WikiParser(inputFilename = currentFile,
+                                                        outputLanguage = currentLang,
+                                                        inputLanguage = inputLangDefault,
+                                                        location = location,
+                                                        projectId = projectId,
+                                                        outputDirname= inputArgs.get("--outdir", None))
 
-            # Parse the mediawiki file and store into a local data structure
-            # Verify the language that the user has provided.
-            if inputArgs['--lang']:
-
-                multiLang = inputArgs["<outputlanguages>"].rsplit(',')
-
-                # User has asked for an output language just need to verify it is allowed.
-                for currentLang in multiLang:
-
-                    if not (currentLang in WikiData.SUPPORTED_LANGUAGES.keys()):
-                        print "Error: Language (" + inputArgs["<outputlanguages>"] + ") not supported."
-
-                        print "Supported are: " + str(supportedLanguagesString())
-                        return ERROR_LANGUAGE_NOT_SUPPORTED
-
-                    mediawikiParser = WikiParser.WikiParser(inputFilename = inputDir + currentFile,
-                                                            outputLanguage = currentLang,
-                                                            outputDirname= inputArgs.get("<outputDirname>", None))
-                    mediawikiParser.readProcessTranslateWrite()
-            else:
-                mediawikiParser = WikiParser.WikiParser(inputFilename = inputDir + currentFile,
-                                                        outputDirname= inputArgs.get("<outputDirname>", None))
+                # Read and process the input file, then translate the data to the target output language.
+                # Then write the translated information to the output file.
                 mediawikiParser.readProcessTranslateWrite()
+
+    except ValueError as exception:
+        print exception
+        return ERROR_FILE_DOES_NOT_EXIST
 
     # DEBUG: Report the data structure of special sequences.
     # mediawikiParser.printWikiParser()
@@ -178,7 +165,7 @@ def main():
 
 
 #
-# Main driver for Cross-Check.
+# Main driver.
 #
 if __name__ == '__main__':
     main()
